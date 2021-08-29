@@ -1,0 +1,351 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  
+    <build>
+        <plugins>
+          <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+   
+       <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <configuration>
+                <mainClass>org.aksw.simba.start.QueryEvaluation</mainClass>
+            </configuration>
+        </plugin>
+        
+         <plugin>                      
+        <groupId>org.apache.maven.plugins</groupId>                      
+        <artifactId>maven-jar-plugin</artifactId>
+                               
+        <configuration>
+      
+
+        <archive>
+        <manifest>
+        <addClasspath>true</addClasspath>
+        <mainClass>org.aksw.simba.start.QueryEvaluation</mainClass>
+        </manifest>
+        </archive>
+        
+        </configuration>
+      </plugin>
+        </plugins>
+    </build>
+       <parent>
+  <groupId>org.aksw</groupId>
+  <artifactId>CostFed</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+ </parent>
+  <artifactId>fedx</artifactId>
+
+<dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ai.djl</groupId>
+                <artifactId>bom</artifactId>
+                <version>0.11.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+  
+
+  <dependencies>
+
+  
+  <!-- https://mvnrepository.com/artifact/net.sf.py4j/py4j -->
+<dependency>
+    <groupId>net.sf.py4j</groupId>
+    <artifactId>py4j</artifactId>
+    <version>0.10.4</version>
+</dependency>
+  
+  
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>5.3</version>
+ </dependency>
+      <dependency>
+        <groupId>ai.djl.pytorch</groupId>
+        <artifactId>pytorch-engine</artifactId>
+      </dependency>
+   
+      <dependency>
+        <groupId>ai.djl.pytorch</groupId>
+        <artifactId>pytorch-native-auto</artifactId>
+            <scope>runtime</scope>
+      </dependency>
+      <dependency>
+    <groupId>ai.djl.pytorch</groupId>
+    <artifactId>pytorch-native-cpu</artifactId>
+    <classifier>win-x86_64</classifier>
+    <scope>runtime</scope>
+ </dependency>
+<!-- https://mvnrepository.com/artifact/org.python/jython-standalone -->
+
+<!-- https://mvnrepository.com/artifact/org.python/jython-installer -->
+
+
+<!-- https://mvnrepository.com/artifact/org.python/jython -->
+
+<!-- https://mvnrepository.com/artifact/org.python/jython-lib -->
+
+<!-- <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-log4j12</artifactId>
+    <version>1.7.26</version>
+</dependency> -->
+<dependency>
+        <groupId>ai.djl.dlr</groupId>
+        <artifactId>dlr-engine</artifactId>
+      </dependency>
+
+  
+
+  
+  <dependency>
+            <groupId>ai.djl</groupId>
+            <artifactId>api</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.slf4j</groupId>
+            		<artifactId>slf4j-api</artifactId>
+            	</exclusion>
+            </exclusions>
+  </dependency>
+        <!-- MXNet -->
+      
+        <dependency>
+        <groupId>ai.djl.tflite</groupId>
+        <artifactId>tflite-engine</artifactId>
+      </dependency>
+      
+  
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-runtime</artifactId>
+      <version>2.3.2</version>
+      <exclusions>
+      	<exclusion>
+      		<groupId>ch.qos.logback</groupId>
+      		<artifactId>logback-classic</artifactId>
+      	</exclusion>
+      	<exclusion>
+      		<groupId>ch.qos.logback</groupId>
+      		<artifactId>logback-core</artifactId>
+      	</exclusion>
+      	<exclusion>
+      		<groupId>org.slf4j</groupId>
+      		<artifactId>slf4j-api</artifactId>
+      	</exclusion>
+      	<exclusion>
+      		<groupId>org.eclipse.rdf4j</groupId>
+      		<artifactId>rdf4j-console</artifactId>
+      	</exclusion>
+      </exclusions>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-repository-sail</artifactId>
+      <version>2.3.2</version>
+      <exclusions>
+      	<exclusion>
+      		<groupId>org.slf4j</groupId>
+      		<artifactId>slf4j-api</artifactId>
+      	</exclusion>
+      </exclusions>
+    </dependency>
+    
+
+        <dependency>
+            <groupId>ai.djl.tensorflow</groupId>
+            <artifactId>tensorflow-native-auto</artifactId>
+        </dependency>
+        
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.1</version>
+    </dependency>
+        
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-repository-http</artifactId>
+      <version>2.3.2</version>
+    <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                	<groupId>org.slf4j</groupId>
+                	<artifactId>slf4j-api</artifactId>
+                </exclusion>
+    </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-sail-nativerdf</artifactId>
+      <version>2.3.2</version>
+      <exclusions>
+      	<exclusion>
+      		<groupId>org.slf4j</groupId>
+      		<artifactId>slf4j-api</artifactId>
+      	</exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-queryresultio-sparqljson</artifactId>
+      <version>2.3.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-queryrender</artifactId>
+      <version>2.3.2</version>
+    </dependency>
+
+<!-- https://mvnrepository.com/artifact/com.bordercloud/SPARQL-JAVA -->
+<dependency>
+    <groupId>com.bordercloud</groupId>
+    <artifactId>SPARQL-JAVA</artifactId>
+    <version>1.0.9</version>
+</dependency>
+
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.4</version>
+    </dependency>
+
+       <dependency>
+    <groupId>com.hp.hpl.jena</groupId>
+    <artifactId>jena</artifactId>
+    <version>2.6.4</version>
+    <exclusions>
+    	<exclusion>
+    		<groupId>log4j</groupId>
+    		<artifactId>log4j</artifactId>
+    	</exclusion>
+    	<exclusion>
+    		<groupId>org.slf4j</groupId>
+    		<artifactId>slf4j-api</artifactId>
+    	</exclusion>
+    	<exclusion>
+    		<groupId>org.slf4j</groupId>
+    		<artifactId>slf4j-log4j12</artifactId>
+    	</exclusion>
+    </exclusions>
+       </dependency>
+
+<dependency>
+	<groupId>org.apache.jena</groupId>
+	<artifactId>jena-core</artifactId>
+	<version>3.4.0</version>
+	<exclusions>
+		<exclusion>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</exclusion>
+	</exclusions>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-collections4</artifactId>
+    <version>4.4</version>
+</dependency>
+
+<dependency>
+    <groupId>com.hp.hpl.jena</groupId>
+    <artifactId>arq</artifactId>
+    <version>2.8.7</version>
+    <exclusions>
+    	<exclusion>
+    		<groupId>log4j</groupId>
+    		<artifactId>log4j</artifactId>
+    	</exclusion>
+    	<exclusion>
+    		<groupId>org.slf4j</groupId>
+    		<artifactId>slf4j-api</artifactId>
+    	</exclusion>
+    </exclusions>
+</dependency>
+
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.8.5</version>
+</dependency>
+
+<dependency>
+	<groupId>org.apache.jena</groupId>
+	<artifactId>jena-arq</artifactId>
+	<version>3.7.0</version>
+	   <exclusions>
+    	<exclusion>
+    		<groupId>log4j</groupId>
+    		<artifactId>log4j</artifactId>
+    	</exclusion>
+    	<exclusion>
+    		<groupId>org.slf4j</groupId>
+    		<artifactId>slf4j-api</artifactId>
+    	</exclusion>
+	   </exclusions>
+</dependency>
+
+<dependency>
+    <groupId>com.hp.hpl.jena</groupId>
+    <artifactId>iri</artifactId>
+    <version>0.8</version>
+</dependency>
+
+<dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.7</version>
+  </dependency>
+
+  <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jul-to-slf4j</artifactId>
+      <version>1.7.7</version>
+  </dependency>
+
+  <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>1.7.7</version>
+  </dependency>
+
+  <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
+      <version>1.7.7</version>
+  </dependency>
+
+  <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+      <version>1.7.7</version>
+  </dependency>
+
+  </dependencies>
+
+
+
+</project>

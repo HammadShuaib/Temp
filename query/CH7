@@ -1,0 +1,24 @@
+SELECT DISTINCT  *
+WHERE
+  { ?uri      <http://tcga.deri.ie/schema/bcr_patient_barcode>  ?patient .
+    ?patient  <http://tcga.deri.ie/schema/consent_or_death_status>  ?deathStatus .
+    ?patient         <http://dbpedia.org/ontology/country>  ?country .
+    ?nytimesCountry               <http://www.w3.org/2002/07/owl#sameAs>  ?country .
+    ?nytimesCountry          <http://data.nytimes.com/elements/search_api_query>  ?apiQuery .
+    ?nytimesCountry          <http://www.w3.org/2002/07/owl#sameAs>  ?location .
+    ?artist   <http://xmlns.com/foaf/0.1/based_near>  ?location .
+    ?artist          <http://xmlns.com/foaf/0.1/firstName>  ?firstName .
+    ?director  <http://dbpedia.org/ontology/spouse>  ?spouse .
+    ?film     <http://dbpedia.org/ontology/director>  ?director .
+    ?x        <http://www.w3.org/2002/07/owl#sameAs>  ?film .
+    ?x           <http://data.linkedmdb.org/resource/movie/runtime>  ?runTime .
+    ?patient  <http://tcga.deri.ie/schema/bcr_drug_barcode>  ?drugbcr .
+    ?drugbcr  <http://tcga.deri.ie/schema/drug_name>  ?drugName .
+    ?drgBnkDrg  <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/casRegistryNumber>  ?id .
+    ?drgBnkDrg           <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/brandName>  ?brandName .
+    ?keggDrug  <http://bio2rdf.org/ns/bio2rdf#xRef>  ?id .
+    ?keggDrug          <http://bio2rdf.org/ns/bio2rdf#mass>  ?mass .
+    ?keggDrug          <http://bio2rdf.org/ns/bio2rdf#synonym>  ?synonym .
+    ?chebiDrug  <http://purl.org/dc/elements/1.1/title>  ?drugName .
+  }
+LIMIT   775

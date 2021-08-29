@@ -1,0 +1,43 @@
+SELECT  *
+WHERE
+  { 
+  
+ ?uri      <http://tcga.deri.ie/schema/bcr_patient_barcode>  ?patient .
+   ?patient  <http://tcga.deri.ie/schema/gender>  ?gender .
+   ?patient          <http://dbpedia.org/ontology/country>  ?country .
+    ?country  <http://dbpedia.org/ontology/populationDensity>  ?popDensity .
+   ?nytimesCountry               <http://www.w3.org/2002/07/owl#sameAs>  ?country .
+   ?nytimesCountry          <http://data.nytimes.com/elements/latest_use>  ?latestuse.
+   ?nytimesCountry          <http://data.nytimes.com/elements/number_of_variants>  ?totalVariants .
+   ?nytimesCountry          <http://data.nytimes.com/elements/associated_article_count>  ?articleCount .
+    ?nytimesCountry         <http://www.w3.org/2002/07/owl#sameAs>  ?geoname .
+    ?role     <http://data.semanticweb.org/ns/swc/ontology#isRoleAt>  <http://data.semanticweb.org/conference/eswc/2010> .
+    ?role          <http://data.semanticweb.org/ns/swc/ontology#heldBy>  ?author .
+    ?author   <http://xmlns.com/foaf/0.1/based_near>  ?geoname .
+   ?artist   <http://xmlns.com/foaf/0.1/based_near>  ?geoname .
+   ?artist          <http://xmlns.com/foaf/0.1/homepage>  ?homepage .
+   ?director  <http://dbpedia.org/ontology/nationality>  ?dbpediaCountry .
+   ?film     <http://dbpedia.org/ontology/director>  ?director .
+   ?x        <http://www.w3.org/2002/07/owl#sameAs>  ?film .
+   ?x           <http://data.linkedmdb.org/resource/movie/genre>  ?genre .
+   ?patient  <http://tcga.deri.ie/schema/bcr_drug_barcode>  ?drugbcr .
+   ?drugbcr  <http://tcga.deri.ie/schema/drug_name>  ?drugName .
+   ?drgBnkDrg  <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/inchiKey>  ?inchiKey .
+   ?drgBnkDrg          <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/meltingPoint>  ?meltingPoint .
+   ?drgBnkDrg          <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/chemicalStructure>  ?chemicalStructure .
+   ?drgBnkDrg          <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/casRegistryNumber>  ?i.
+   ?keggDrug  a                    <http://bio2rdf.org/ns/kegg#Drug> .
+   ?keggDrug          <http://bio2rdf.org/ns/bio2rdf#xRef>  ?i.
+   ?keggDrug          <http://purl.org/dc/elements/1.1/title>  ?title .
+    ?chebiDrug  <http://purl.org/dc/elements/1.1/title>  ?drugName .
+    ?chebiDrug          <http://bio2rdf.org/ns/chebi#iupacName>  ?chebiIupacName
+  
+  
+    OPTIONAL
+{ 
+?drgBnkDrg <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/inchiIdentifier> ?drugbankInchi .
+?chebiDrug <http://bio2rdf.org/ns/bio2rdf#inchi> ?chebiInchi .
+FILTER ( ?drugbankInchi = ?chebiInchi )
+      }
+  }
+LIMIT   1

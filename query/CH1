@@ -1,0 +1,18 @@
+SELECT DISTINCT  *
+WHERE
+  { ?place          <http://www.geonames.org/ontology#name>  ?countryName .
+    ?place          <http://www.geonames.org/ontology#countryCode>  ?countryCode .
+    ?place          <http://www.geonames.org/ontology#population>  ?population .
+    ?place          <http://www.w3.org/2002/07/owl#sameAs>  ?geonameplace .
+    ?geonameplace          <http://dbpedia.org/ontology/capital>  ?capital .
+    ?geonameplace          <http://dbpedia.org/ontology/anthem>  ?nationalAnthem .
+    ?geonameplace          <http://dbpedia.org/ontology/foundingDate>  ?foundingDate .
+    ?geonameplace          <http://dbpedia.org/ontology/largestCity>  ?largestCity .
+    ?geonameplace          <http://dbpedia.org/ontology/ethnicGroup>  ?ethnicGroup .
+    ?geonameplace          <http://dbpedia.org/ontology/motto>  ?motto .
+    ?role     <http://data.semanticweb.org/ns/swc/ontology#heldBy>  ?writer .
+    ?writer   <http://xmlns.com/foaf/0.1/based_near>  ?geonameplace .
+    ?dbpediaCountry   <http://www.w3.org/2002/07/owl#sameAs>  ?geonameplace .
+    ?dbpediaCountry   <http://data.nytimes.com/elements/latest_use>  ?dateused .
+  }
+ORDER BY DESC(?population)

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;complete-largeRDFBench-summaries.n3&apos; to &apos;stats&apos;&#x0D;&#x0A;- Original project: &apos;Thesis-master-Dup_Current&apos;&#x0D;&#x0A;- Destination element: &apos;stats&apos;&#x0D;&#x0A;- Original element: &apos;complete-largeRDFBench-summaries.n3&apos;" description="Copy file" element1="costfed/summaries/complete-largeRDFBench-summaries.n3" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1595594123486" target="/LHD/stats" units="0" version="1.0"/>
+</session>

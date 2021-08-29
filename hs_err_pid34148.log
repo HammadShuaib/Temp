@@ -1,0 +1,207 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 268435456 bytes for Failed to commit area from 0x0000000700000000 to 0x0000000710000000 of length 268435456.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Zero Based Compressed Oops mode in which the Java heap is
+#     placed in the first 32GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 32GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (./open/src/hotspot/os/windows/os_windows.cpp:3315), pid=34148, tid=38204
+#
+# JRE version:  (14.0.1+7) (build )
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (14.0.1+7, mixed mode, sharing, tiered, compressed oops, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Dmaven.home=EMBEDDED -Dclassworlds.conf=C:\Users\Saleem\eclipse-workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf10844357189897981286.tmp -Dmaven.multiModuleProjectDirectory=C:\Thesis\BushyTreeFinal_BeforeComments2 - Copy\Thesis-master-Dup_Current -Dfile.encoding=Cp1252 org.codehaus.plexus.classworlds.launcher.Launcher -B clean compile dependency:tree test test-compile package install
+
+Host: Intel(R) Xeon(R) CPU E5-2695 v4 @ 2.10GHz, 6 cores, 15G,  Windows 10 , 64 bit Build 18362 (10.0.18362.1082)
+Time: Sun Oct  4 13:30:17 2020 W. Europe Daylight Time elapsed time: 0 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00000277076d8800):  JavaThread "Unknown thread" [_thread_in_vm, id=38204, stack(0x000000fbbb300000,0x000000fbbb400000)]
+
+Stack: [0x000000fbbb300000,0x000000fbbb400000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x5f840a]
+V  [jvm.dll+0x741e4a]
+V  [jvm.dll+0x7435ff]
+V  [jvm.dll+0x743c43]
+V  [jvm.dll+0x20d288]
+V  [jvm.dll+0x5f57ba]
+V  [jvm.dll+0x5ea615]
+V  [jvm.dll+0x2c7e9c]
+V  [jvm.dll+0x2c7cd2]
+V  [jvm.dll+0x2cdbbc]
+V  [jvm.dll+0x313ff8]
+V  [jvm.dll+0x313720]
+V  [jvm.dll+0x2a092a]
+V  [jvm.dll+0x2a1a79]
+V  [jvm.dll+0x71f718]
+V  [jvm.dll+0x321c44]
+V  [jvm.dll+0x700b0c]
+V  [jvm.dll+0x392dff]
+V  [jvm.dll+0x394e71]
+C  [jli.dll+0x523b]
+C  [ucrtbase.dll+0x20e82]
+C  [KERNEL32.DLL+0x17bd4]
+C  [ntdll.dll+0x6ce51]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007ffb26593078, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+
+Other Threads:
+  0x0000027707743000 GCTaskThread "GC Thread#0" [stack: 0x000000fbbb400000,0x000000fbbb500000] [id=6524]
+  0x0000027707765800 ConcurrentGCThread "G1 Main Marker" [stack: 0x000000fbbb500000,0x000000fbbb600000] [id=13260]
+  0x0000027707767000 ConcurrentGCThread "G1 Conc#0" [stack: 0x000000fbbb600000,0x000000fbbb700000] [id=39260]
+
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffb25dc1257]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00000277076d5cd0] Heap_lock - owner thread: 0x00000277076d8800
+
+Heap address: 0x0000000700000000, size: 4096 MB, Compressed Oops mode: Zero based, Oop shift amount: 3
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes unloaded (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (2 events):
+Event: 0.062 Loaded shared library C:\Program Files\Java\jdk-14.0.1\bin\java.dll
+Event: 0.064 Loaded shared library C:\Program Files\Java\jdk-14.0.1\bin\zip.dll
+
+
+Dynamic libraries:
+0x00007ff64bf20000 - 0x00007ff64bf2f000 	C:\Program Files\Java\jdk-14.0.1\bin\javaw.exe
+0x00007ffb4f020000 - 0x00007ffb4f210000 	C:\windows\SYSTEM32\ntdll.dll
+0x00007ffb4e020000 - 0x00007ffb4e0d2000 	C:\windows\System32\KERNEL32.DLL
+0x00007ffb4c2b0000 - 0x00007ffb4c555000 	C:\windows\System32\KERNELBASE.dll
+0x00007ffb4a050000 - 0x00007ffb4a0df000 	C:\windows\SYSTEM32\apphelp.dll
+0x00007ffb4c560000 - 0x00007ffb4c65a000 	C:\windows\System32\ucrtbase.dll
+0x00007ffb46690000 - 0x00007ffb466a8000 	C:\Program Files\Java\jdk-14.0.1\bin\jli.dll
+0x00007ffb4e150000 - 0x00007ffb4e1f3000 	C:\windows\System32\ADVAPI32.dll
+0x00007ffb4e200000 - 0x00007ffb4e29e000 	C:\windows\System32\msvcrt.dll
+0x00007ffb4eb30000 - 0x00007ffb4ebc7000 	C:\windows\System32\sechost.dll
+0x00007ffb4ec50000 - 0x00007ffb4ed70000 	C:\windows\System32\RPCRT4.dll
+0x00007ffb4e990000 - 0x00007ffb4eb25000 	C:\windows\System32\USER32.dll
+0x00007ffb4c690000 - 0x00007ffb4c6b1000 	C:\windows\System32\win32u.dll
+0x00007ffb4dff0000 - 0x00007ffb4e016000 	C:\windows\System32\GDI32.dll
+0x00007ffb4c060000 - 0x00007ffb4c1f6000 	C:\windows\System32\gdi32full.dll
+0x00007ffb4ce60000 - 0x00007ffb4cefe000 	C:\windows\System32\msvcp_win.dll
+0x00007ffb40ad0000 - 0x00007ffb40ae5000 	C:\Program Files\Java\jdk-14.0.1\bin\VCRUNTIME140.dll
+0x00007ffb34730000 - 0x00007ffb349b4000 	C:\windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.18362.1082_none_9e8193e1e45b25c1\COMCTL32.dll
+0x00007ffb4d3b0000 - 0x00007ffb4d6e5000 	C:\windows\System32\combase.dll
+0x00007ffb4cf00000 - 0x00007ffb4cf80000 	C:\windows\System32\bcryptPrimitives.dll
+0x00007ffb44ca0000 - 0x00007ffb44caa000 	C:\windows\SYSTEM32\VERSION.dll
+0x00007ffb4e120000 - 0x00007ffb4e14e000 	C:\windows\System32\IMM32.DLL
+0x00007ffb38c80000 - 0x00007ffb38d1b000 	C:\Program Files\Java\jdk-14.0.1\bin\msvcp140.dll
+0x00007ffb25b10000 - 0x00007ffb2662e000 	C:\Program Files\Java\jdk-14.0.1\bin\server\jvm.dll
+0x00007ffb4d2d0000 - 0x00007ffb4d2d8000 	C:\windows\System32\PSAPI.DLL
+0x00007ffb47e40000 - 0x00007ffb47e49000 	C:\windows\SYSTEM32\WSOCK32.dll
+0x00007ffb4d260000 - 0x00007ffb4d2cf000 	C:\windows\System32\WS2_32.dll
+0x00007ffb3eec0000 - 0x00007ffb3eee4000 	C:\windows\SYSTEM32\WINMM.dll
+0x00007ffb3ee90000 - 0x00007ffb3eebd000 	C:\windows\SYSTEM32\WINMMBASE.dll
+0x00007ffb4bfb0000 - 0x00007ffb4bffa000 	C:\windows\System32\cfgmgr32.dll
+0x00007ffb4bf90000 - 0x00007ffb4bfa1000 	C:\windows\System32\kernel.appcore.dll
+0x00007ffb47dd0000 - 0x00007ffb47dda000 	C:\Program Files\Java\jdk-14.0.1\bin\jimage.dll
+0x00007ffb474a0000 - 0x00007ffb47694000 	C:\windows\SYSTEM32\DBGHELP.DLL
+0x00007ffb47030000 - 0x00007ffb4705a000 	C:\windows\SYSTEM32\dbgcore.DLL
+0x00007ffb405d0000 - 0x00007ffb405f5000 	C:\Program Files\Java\jdk-14.0.1\bin\java.dll
+0x00007ffb40a20000 - 0x00007ffb40a36000 	C:\Program Files\Java\jdk-14.0.1\bin\zip.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Program Files\Java\jdk-14.0.1\bin;C:\windows\SYSTEM32;C:\windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.18362.1082_none_9e8193e1e45b25c1;C:\Program Files\Java\jdk-14.0.1\bin\server
+
+VM Arguments:
+jvm_args: -Dmaven.home=EMBEDDED -Dclassworlds.conf=C:\Users\Saleem\eclipse-workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf10844357189897981286.tmp -Dmaven.multiModuleProjectDirectory=C:\Thesis\BushyTreeFinal_BeforeComments2 - Copy\Thesis-master-Dup_Current -Dfile.encoding=Cp1252 
+java_command: org.codehaus.plexus.classworlds.launcher.Launcher -B clean compile dependency:tree test test-compile package install
+java_class_path (initial): C:\Users\Saleem\.p2\pool\plugins\org.eclipse.m2e.maven.runtime_1.15.0.20200310-1832\jars\plexus-classworlds-2.6.0.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 3                                         {product} {ergonomic}
+     uint ConcGCThreads                            = 2                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 6                                         {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 1048576                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 268435456                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 4294967296                                {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 1048576                                   {product} {ergonomic}
+   size_t MinHeapSize                              = 8388608                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5832780                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122912730                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122912730                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+   size_t SoftMaxHeapSize                          = 4294967296                             {manageable} {ergonomic}
+     bool UseCompressedClassPointers               = true                                 {lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                                 {lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Java\jdk-14.0.1
+PATH=C:/Program Files/Java/jdk-14.0.1/bin/server;C:/Program Files/Java/jdk-14.0.1/bin;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Users\Saleem\Downloads\apache-maven-3.6.3;C:\Program Files\Java\jdk-14.0.1;C:\Program Files\Java\jdk-14.0.1\bin;C:\Program Files\nodejs\;C:\Users\Saleem\Downloads\apache-maven-3.6.3\bin;C:\Users\Saleem\AppData\Local\Microsoft\WindowsApps;C:\Users\Saleem\AppData\Roaming\npm;C:\windows\system32;
+USERNAME=Saleem
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 63 Stepping 0, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10 , 64 bit Build 18362 (10.0.18362.1082)
+OS uptime: 22 days 19:49 hours
+VMWare virtualization detected
+
+CPU:total 6 (initial active 6) (3 cores per cpu, 1 threads per core) family 6 model 63 stepping 0, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, lzcnt, tsc, tscinvbit, bmi1, bmi2, fma
+
+Memory: 4k page, system-wide physical 16382M (1305M free)
+TotalPageFile size 35553M (AvailPageFile size 152M)
+current process WorkingSet (physical memory assigned to process): 11M, peak: 11M
+current process commit charge ("private bytes"): 57M, peak: 313M
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (14.0.1+7) for windows-amd64 JRE (14.0.1+7), built on Mar  5 2020 10:30:14 by "mach5one" with MS VC++ 15.9 (VS2017)
+
+END.

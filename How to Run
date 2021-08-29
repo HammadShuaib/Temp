@@ -1,0 +1,8 @@
+Please adjust the following files
+
+1) In SimpleHello.py in lines 42 and 43 give path of file created by java as mentioned in 5)
+2) In SimpleHello.py in lines 106,107 select a path in your machine for path of MS Excel file containing only joined columns
+3) In SimpleHello.py in lines 161 select a path in your machine for path of MS Excel file containing output of joined tables
+4) In class ParaEng of Java Program give path of query file for filter, optional and union queries. 
+   Please seperation between Subject,predicate and object in query file should be 1 space. Moreover, dot(.) at the end of query line should also be seperated by 1 space from object.
+5) In class BGPEval of Java program line number 4973 and 4980 give path to write left table and right table in MS Excel file to be used in 1)

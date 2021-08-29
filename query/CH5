@@ -1,0 +1,17 @@
+SELECT DISTINCT  *
+WHERE
+  { ?uri      <http://tcga.deri.ie/schema/bcr_patient_barcode>  ?patient .
+    ?patient  ?p                    ?country .
+    ?country  <http://dbpedia.org/ontology/populationDensity>  32 .
+    ?nytimesCountry               <http://www.w3.org/2002/07/owl#sameAs>  ?country .
+    ?nytimesCountry          <http://data.nytimes.com/elements/latest_use>  ?dateused .
+    ?nytimesCountry          <http://www.w3.org/2002/07/owl#sameAs>  ?geoname .
+    ?artist   <http://xmlns.com/foaf/0.1/based_near>  ?geoname .
+    ?artist          <http://xmlns.com/foaf/0.1/homepage>  ?homepage .
+	?film     <http://dbpedia.org/ontology/director>  <http://dbpedia.org/resource/Michael_Haussman> .
+    ?x        <http://www.w3.org/2002/07/owl#sameAs>  ?film .
+    ?x          <http://data.linkedmdb.org/resource/movie/genre>  ?genre .
+    ?patient  <http://tcga.deri.ie/schema/bcr_drug_barcode>  ?drugbcr .
+    ?drugbcr  <http://tcga.deri.ie/schema/drug_name>  ?drugName .
+   }
+LIMIT   5

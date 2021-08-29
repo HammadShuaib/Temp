@@ -1,0 +1,15 @@
+SELECT DISTINCT  *
+WHERE
+  { ?role     <http://data.semanticweb.org/ns/swc/ontology#isRoleAt>  <http://data.semanticweb.org/conference/eswc/2010> .
+    ?role          <http://data.semanticweb.org/ns/swc/ontology#heldBy>  ?author .
+    ?author   <http://xmlns.com/foaf/0.1/based_near>  ?geoname .
+    ?geoname  <http://www.w3.org/2003/01/geo/wgs84_pos#long>  ?longitude .
+    ?dbpediaCountry           <http://www.w3.org/2002/07/owl#sameAs>  ?geoname .
+    ?dbpediaCountry          <http://data.nytimes.com/elements/latest_use>  ?dateused .
+    ?artist   <http://xmlns.com/foaf/0.1/based_near>  ?geoname .
+    ?artist          <http://xmlns.com/foaf/0.1/homepage>  <http://people.csail.mit.edu/lkagal/> .
+    ?director  <http://dbpedia.org/ontology/nationality>  ?geoname .
+    ?film     <http://dbpedia.org/ontology/director>  ?director .
+    ?mdbFilm  <http://www.w3.org/2002/07/owl#sameAs>  ?film .
+    ?mdbFilm          <http://data.linkedmdb.org/resource/movie/genre>  ?genre .
+   }

@@ -1,0 +1,16 @@
+org.eclipse.rdf4j.query.QueryEvaluationException: java.lang.NullPointerException: Cannot load from object array because "com.fluidops.fedx.optimizer.Optimizer.triples" is null
+	at org.eclipse.rdf4j.repository.sail.SailTupleQuery.evaluate(SailTupleQuery.java:64)
+	at org.aksw.simba.start.QueryEvaluation.evaluate(QueryEvaluation.java:242)
+	at org.aksw.simba.start.QueryEvaluation.multyEvaluate(QueryEvaluation.java:286)
+	at org.aksw.simba.start.QueryEvaluation.main(QueryEvaluation.java:199)
+	at org.codehaus.mojo.exec.ExecJavaMojo$1.run(ExecJavaMojo.java:254)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+Caused by: org.eclipse.rdf4j.sail.SailException: java.lang.NullPointerException: Cannot load from object array because "com.fluidops.fedx.optimizer.Optimizer.triples" is null
+	at com.fluidops.fedx.FedXConnection.evaluateInternal(FedXConnection.java:476)
+	at org.eclipse.rdf4j.sail.helpers.AbstractSailConnection.evaluate(AbstractSailConnection.java:267)
+	at org.eclipse.rdf4j.repository.sail.SailTupleQuery.evaluate(SailTupleQuery.java:54)
+	... 5 more
+Caused by: java.lang.NullPointerException: Cannot load from object array because "com.fluidops.fedx.optimizer.Optimizer.triples" is null
+	at com.fluidops.fedx.optimizer.Optimizer.optimize(Optimizer.java:385)
+	at com.fluidops.fedx.FedXConnection.evaluateInternal(FedXConnection.java:436)
+	... 7 more

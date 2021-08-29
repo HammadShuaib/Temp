@@ -1,0 +1,14 @@
+SELECT DISTINCT  ?dbPediaDrug ?drugBankName ?keggmass ?chebiIupacName
+WHERE
+  { ?dbPediaDrug  a                 <http://dbpedia.org/ontology/Drug> .
+    ?dbPediaDrug         <http://dbpedia.org/ontology/casNumber>  ?casNumber .
+	?drugbankDrug         <http://www.w3.org/2002/07/owl#sameAs>  ?dbPediaDrug .
+   	?drugbankDrug     <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/inchiIdentifier>  ?drugbankInchi .
+	?drugbankDrug    <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/genericName>  ?drugBankName .
+	?drugbankDrug          <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/keggCompoundId>  ?keggDrug .
+	?keggDrug  <http://bio2rdf.org/ns/bio2rdf#mass>  ?keggmass .
+    ?chebiDrug  <http://purl.org/dc/elements/1.1/title>  ?drugBankName .
+    ?chebiDrug          <http://bio2rdf.org/ns/chebi#iupacName>  ?chebiIupacName .
+    ?chebiDrug  <http://bio2rdf.org/ns/bio2rdf#inchi>  ?chebiInchi .
+    FILTER regex( ?chebiIupacName, "adenosine")
+  }

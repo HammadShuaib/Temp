@@ -1,0 +1,15 @@
+SELECT  *
+WHERE
+  { ?drugbcr  <http://tcga.deri.ie/schema/drug_name>  ?drug .
+    ?drgBnkDrg  <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/genericName>  ?drug .
+    ?drgBnkDrg          <http://www.w3.org/2002/07/owl#sameAs>  ?dbpediaDrug .
+    ?dbpediaDrug  <http://www.w3.org/2000/01/rdf-schema#label>  ?label .
+    ?drgBnkDrg  <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/keggCompoundId>  ?keggDrug .
+    ?keggDrug  <http://bio2rdf.org/ns/bio2rdf#mass>  ?keggmass .
+    ?keggDrug         <http://purl.org/dc/elements/1.1/title>  ?title .
+    ?chebiDrug  <http://purl.org/dc/elements/1.1/title>  ?drug .
+    ?chebiDrug          <http://bio2rdf.org/ns/bio2rdf#mass>  ?mass .
+    ?chebiDrug          <http://bio2rdf.org/ns/bio2rdf#formula>  ?formula .
+    ?chebiDrug          <http://bio2rdf.org/ns/bio2rdf#urlImage>  ?image .
+  }
+ORDER BY ?mass

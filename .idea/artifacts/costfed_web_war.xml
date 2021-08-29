@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="costfed-web:war">
+    <output-path>$PROJECT_DIR$/costfed-web/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>costfed-web</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="${project.artifactId}-${project.version}.war">
+      <element id="artifact" artifact-name="costfed-web:war exploded" />
+    </root>
+  </artifact>
+</component>

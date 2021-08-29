@@ -1,0 +1,25 @@
+SELECT  ?patient ?country ?articleCount ?chemicalStructure ?id
+WHERE
+  { <http://tcga.deri.ie/TCGA-43-2576>            <http://tcga.deri.ie/schema/bcr_patient_barcode>  ?patient .
+    ?patient  <http://tcga.deri.ie/schema/gender>  "FEMALE" .
+    ?patient          <http://dbpedia.org/ontology/country>  ?country .
+	?patient  <http://tcga.deri.ie/schema/bcr_drug_barcode>  ?drugbcr .
+    ?drugbcr  <http://tcga.deri.ie/schema/drug_name>  "Cisplatin" .
+    ?country  <http://dbpedia.org/ontology/populationDensity>  ?popDen .
+    ?nytimesCountry               <http://www.w3.org/2002/07/owl#sameAs>  ?country .
+    ?nytimesCountry          <http://data.nytimes.com/elements/latest_use>  ?latestused .
+    ?nytimesCountry          <http://data.nytimes.com/elements/number_of_variants>  ?totalVariants .
+    ?nytimesCountry          <http://data.nytimes.com/elements/associated_article_count>  ?articleCount .
+    ?nytimesCountry          <http://www.w3.org/2002/07/owl#sameAs>  ?geoname .
+	?director  <http://dbpedia.org/ontology/nationality>  ?country .
+    ?x        <http://www.w3.org/2002/07/owl#sameAs>  <http://dbpedia.org/resource/The_Last_Valley> .
+    ?x           <http://data.linkedmdb.org/resource/movie/genre>  <http://data.linkedmdb.org/resource/film_genre/4> .
+ 	?director  <http://dbpedia.org/ontology/nationality>  ?geoname .
+    ?drgBnkDrg  <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/inchiKey>  ?inchiKey .
+    ?drgBnkDrg          <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/meltingPoint>  ?meltingPoint .
+    ?drgBnkDrg          <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/chemicalStructure>  ?chemicalStructure .
+    ?drgBnkDrg          <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/casRegistryNumber>  ?id .
+    ?keggDrug  a                    <http://bio2rdf.org/ns/kegg#Drug> .
+    ?keggDrug          <http://bio2rdf.org/ns/bio2rdf#xRef>  ?id .
+    ?keggDrug          <http://purl.org/dc/elements/1.1/title>  "Follitropin alfa/beta" .
+  }
