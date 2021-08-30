@@ -338,7 +338,7 @@ public class QueryTask {
 
 //	ReadWriteLock lock = new ReentrantReadWriteLock();
 			if (QueryTask.isBound == 0)
-				System.out.println("This is now creating extended query:" + qString + "--" + url);
+				System.out.println("This is now creating extended query:" + qString + "--" + url+"--"+service);
 
 			//
 //					ForkJoinPool fjp = new ForkJoinPool();
@@ -460,7 +460,7 @@ public class QueryTask {
 			a = rs.nextBinding();
 			Pattern regex = Pattern.compile("[?=\\)][?= ][?=\\(]");
 			int numA = regex.split(a.toString()).length;
-		 System.out.println("These are the equations:"+num+"--"+numA+"--"+a);
+//		 System.out.println("These are the equations:"+num+"--"+numA+"--"+a);
 			if (numA == num) {
 //	System.out.println("This is working set:"+a);
 				results.add(a);

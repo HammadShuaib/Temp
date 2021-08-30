@@ -40,17 +40,23 @@ import com.fluidops.fedx.trunk.parallel.engine.exec.QueryTask;
 import com.fluidops.fedx.trunk.parallel.engine.exec.TripleExecution;
 import com.fluidops.fedx.trunk.parallel.engine.main.BGPEval;
 import com.fluidops.fedx.trunk.stream.engine.util.QueryUtil;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.sun.org.slf4j.internal.Logger;
 
 import org.apache.commons.collections4.ListUtils;
 
 public class BindJoin extends EdgeOperator {
 	int remaining = 0;
-	static List<EdgeOperator> AllEdges = new ArrayList<>();
+	static List<EdgeOperator> AllEdges1 = new ArrayList<>();
 	private int total;
 	Var joinVars = null;
+	 public static Multimap<Binding,Binding> MultipleBinding =  ArrayListMultimap.create();
+	
 	// public Stream<Binding> results1;
 	public static List<org.apache.jena.sparql.engine.binding.Binding> intermediate = new ArrayList<>();
 	static List<Binding> results = new ArrayList<Binding>();
@@ -63,6 +69,7 @@ public class BindJoin extends EdgeOperator {
 	public void exec() {
 		results = new ArrayList<>();
 		intermediate = new ArrayList<>();
+		AllEdges1 =new ArrayList<>();
 		System.out.println("These are intermediate0000:");
 
 		Vertex end;
@@ -101,11 +108,13 @@ public class BindJoin extends EdgeOperator {
 		 * e4.printStackTrace(); } catch (ExecutionException e4) { // TODO
 		 * Auto-generated catch block e4.printStackTrace(); } executor.shutdown();
 		 */
-		for (Binding i1 : intermediate)
-			System.out.println("These are intermediate size:" + i1);
+	//	for (ConcurrentHashMap<Vertex, Edge> i1 : BGPEval.StartBindingFinal.keySet())
+	//		System.out.println("These are intermediate size:" + i1);
+	//	for (Binding i1 : intermediate)
+	//		System.out.println("These are intermediate size:" + i1);
 		results = te.exec(intermediate, null);
-		for (Binding r : results)
-			System.out.println("These are size of result in BindJoin:" + r);
+	//	for (Binding r : results)
+	//		System.out.println("These are size of result in BindJoin:" + r);
 		if (results == null || results.size() == 0) {
 			results = te.exec(null, null);
 			// for(Binding i1:results)
@@ -113,55 +122,112 @@ public class BindJoin extends EdgeOperator {
 		}
 		for (List<EdgeOperator> e : BGPEval.JoinGroupsListExclusive) {
 			for (EdgeOperator e1 : e)
-				if (e1.getEdge().equals(edge)) {
-					AllEdges.addAll(e);
+				if (e1.getEdge().toString().equals(edge.toString())) {
+					AllEdges1.addAll(e);
 				}
 		}
 
 		for (EdgeOperator e : BGPEval.JoinGroupsListLeft) {
-
-			if (e.getEdge().equals(edge)) {
-				AllEdges.add(e);
+			System.out.println("This is equality in JoinGroupsListLeft:"+e.getEdge().toString()+"--"+edge.toString());
+			if (e.getEdge().toString().equals(edge.toString())) {
+				AllEdges1.add(e);
 			}
 		}
 
 		for (EdgeOperator e1 : BGPEval.JoinGroupsListRight) {
 
-			if (e1.getEdge().equals(edge)) {
-				AllEdges.add(e1);
+			if (e1.getEdge().toString().equals(edge.toString())) {
+				AllEdges1.add(e1);
 			}
 		}
+//		Iterator<Var> vff = BindJoin.results.iterator().next().vars();
+//		Var vf = null;
+//			while (vff.hasNext()) {
+//				 vf = vff.next();
 
-		if (!BGPEval.StartBinding123.containsKey(start)) {
-			System.out.println("This key not present:"+start);
+//			}
+			
+	//	System.out.println("THis is the vertex of this query:"+vf);	
+				// Multimap<String, String> cars = ArrayListMultimap.create();
+	//	if (!BGPEval.StartBinding123.containsKey(start)) {
+			System.out.println("This key not present:"+BindJoin.AllEdges1);
 			ForkJoinPool fjp = new ForkJoinPool();
 			try {
-				fjp.submit(() -> HashJoin.IntermediateProcedure(BindJoin.results)).get();
+				fjp.submit(() -> HashJoin.IntermediateProcedure(BindJoin.results,BindJoin.AllEdges1)).get();
 			} catch (InterruptedException e4) {
 				// TODO Auto-generated catch block
 				e4.printStackTrace();
 			} catch (ExecutionException e4) {
 				// TODO Auto-generated catch block
 				e4.printStackTrace();
-			}
+		//	}
+		}
 			fjp.shutdown();
-		} else {
-			Set<Binding> temp1 = new HashSet<>();
-			System.out.println("This key is present:"+start);
+		
+		//	Iterator<Var> l = BindJoin.results.iterator().next().vars();
+		//	Set<Var> v9=new HashSet<>();
+		//		while (l.hasNext()) {
+		//			Var v2 = l.next();
+		//			v9.add(v2);
+					
+							
+		//	}
+			
+				
+				
+			//	for(Var v1:v9)
+			//		if(BGPEval.ProcessedVertexT.toString().contains(v1.toString()))
+			//		{
+				//		if(!Var.alloc(start.getNode()).toString().equals(v1.toString())) {
+				//			Var va = Var.alloc(edge.getV1().getNode());
+							
+				//			Var va1 = Var.alloc(edge.getV2().getNode());
+									
+					//		for(Binding e1:results) {
+								
+					//		MultipleBinding.put(BindingFactory.binding(va1, e1.get(va1)),BindingFactory.binding(va, e1.get(va)));
+							
+						//	}
+						
+							
+
+							System.out.println("----------------------------------------------------------------------------");
+						
+						//	for(Entry<Binding, Binding> mb:MultipleBinding.entries())
+						//		System.out.println("This is child1:"+mb);
+//			}
+						
+//					}
+				
+	//			if(v9.contains(Var.alloc(start.getNode())))
+		//			System.out.println("These are now being processed here in here");
+			if (BGPEval.StartBinding123.containsKey(start)) {
+		
+							
+			//	for(Binding e2:results)
+			//	{	System.out.println("This is parent:"+e2);
+			//		for(Binding i1:inter1)
+			//		if(e2.toString().contains(i1.toString()))
+				//		System.out.println("This is child2:"+inter1);
+				//}
+				System.out.println("----------------------------------------------------------------------------");
+				
+				Set<Binding> temp1 = new HashSet<>();
+		//	System.out.println("This key is present:"+start);
 			Set<Vertex> v = new HashSet<>();
 //for(Entry<Vertex, Set<Binding>>	e:BGPEval.StartBinding123.entrySet()) {
 			v.addAll(BGPEval.StartBinding123.keySet());
 //}
 			int br = 0;
-			Iterator<Var> l = BindJoin.results.iterator().next().vars();
+			Iterator<Var> l1 = BindJoin.results.iterator().next().vars();
 			for (Vertex v1 : v) {
 				Var r = Var.alloc(v1.getNode());
-				System.out.println("This is rule no. 1 in BindJoin:" + r);
-				while (l.hasNext()) {
-					Var v2 = l.next();
+			//	System.out.println("This is rule no. 1 in BindJoin:" + r);
+				while (l1.hasNext()) {
+					Var v2 = l1.next();
 
 					if (r.equals(v2)) {
-						System.out.println("This is rule no.3 in BindJoin:" + r + "--" + v);
+	//					System.out.println("This is rule no.3 in BindJoin:" + r + "--" + v);
 						joinVars = v2;
 						br = 1;
 						break;
@@ -174,7 +240,7 @@ public class BindJoin extends EdgeOperator {
 				}
 			}
 			if (joinVars != null) {
-				System.out.println("This is rule no. 2 in BindJoin:" + joinVars);
+//				System.out.println("This is rule no. 2 in BindJoin:" + joinVars);
 
 				for (Binding e1 : results) {
 //		BindingMap join = BindingFactory.create();
@@ -190,8 +256,8 @@ public class BindJoin extends EdgeOperator {
 //	BGPEval.StartBinding123.remove(joinVars);//.replace(start, BGPEval.StartBinding123.get(start), temp1);
 				BGPEval.StartBinding123.put(start, temp1);
 //	for(Entry<Vertex, Set<Binding>> t:BGPEval.StartBinding123.entrySet())
-				System.out.println("This the replacement:" + "--" + temp1.size() + "--"
-						+ BGPEval.StartBinding123.get(start).size());
+			//	System.out.println("This the replacement:" + "--" + temp1.size() + "--"
+			//			+ BGPEval.StartBinding123.get(start).size());
 			}
 		}
 		/// results = QueryUtil.join(results, start.getBindings());

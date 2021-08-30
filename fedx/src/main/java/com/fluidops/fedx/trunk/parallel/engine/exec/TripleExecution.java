@@ -200,7 +200,7 @@ public class TripleExecution {
 						});
 //						ForkJoinTask.invokeAll();
 
-						ex.shutdown();
+						ex.shutdown();	
 
 					}
 				}
@@ -211,7 +211,6 @@ public class TripleExecution {
 				return new ArrayList<Binding>();
 			}
 			Set<Endpoint> relevantSources1 = opt.getEndpointE(triple);
-
 			long start = System.currentTimeMillis();
 
 			List<Callable<Integer>> tasks = new ArrayList<Callable<Integer>>();
@@ -219,13 +218,13 @@ public class TripleExecution {
 			ForkJoinPool exec = new ForkJoinPool();
 
 			for (Endpoint endpoints : relevantSources1) {
-
+				System.out.println("These are the endpoints:"+endpoints+"--"+temp);
+				
 				for (Binding binding : intermediate) {
 					Callable<Integer> c = new Callable<Integer>() {
 						@Override
 						public Integer call() throws Exception {
-							// System.out.println("This is the binding in intermediate within
-							// call:"+binding);
+							 System.out.println("This is the binding in intermediate within call:"+temp+"--"+endpoints);
 
 							BoundQueryTask current3 = new BoundQueryTask(temp, endpoints, binding, string);
 							try {
@@ -240,14 +239,16 @@ public class TripleExecution {
 					};
 					tasks.add(c);
 				}
+			
+				//try {
+					List<Future<Integer>> results = exec.invokeAll(tasks);
+					long elapsed = System.currentTimeMillis() - start;
+					System.out.println(String.format("Total time elapsed:%d ms", elapsed));
+			//	} finally {
+			//	}
 			}
-			try {
-				List<Future<Integer>> results = exec.invokeAll(tasks);
-				long elapsed = System.currentTimeMillis() - start;
-				System.out.println(String.format("Total time elapsed:%d ms", elapsed));
-			} finally {
-				exec.shutdown();
-			}
+			
+			exec.shutdown();
 			
 
 		}

@@ -54,6 +54,7 @@ import org.apache.jena.graph.Node;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.sparql.algebra.Algebra;
+import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.iterator.QueryIteratorBase;
@@ -96,7 +97,7 @@ public  class BGPEval extends QueryIteratorBase {
 //	private	static final com.hp.hpl.log4j.Logger logger = LogManager.getLogger(TripleExecution.class.getName());
 	static ResultSet v = null;
 	 static List<ArrayList<String>> rowsLeft = new ArrayList<>();
-
+	 public static Set<Var> ProcessedVertexT = new HashSet<>();
 	static String[][] finalTable=null;
    static  InputStream targetStream = null;
    static ArrayList<Binding> resultoutput =new ArrayList<>();
@@ -307,7 +308,7 @@ static	 ArrayList<String>  abv= new ArrayList<>();
 		List<EdgeOperator> operators_optional= new Vector<>() ;//=optBT.nextStage();
 		List<EdgeOperator> operators_BushyTreeRight= new Vector<>() ;//=optBT.nextStage();
 		List<EdgeOperator> operators_BushyTreeLeft= new Vector<>() ;//=optBT.nextStage();
-	
+		
 								
 		
 		ListIterator<EdgeOperator> operatorsIterator = operators_independent.listIterator();
@@ -381,12 +382,7 @@ StageGen.kl=0;
 							
 						if(size.getKey()<=size.getValue() && !(size.getKey()==0.02 && size.getValue()==0.02))
 						{
-	//						System.out.println("This is now checking every operator head:"+x.getEdge().getV2());
-							
-				//			for(EdgeOperator io:operators_independent)
-					//			if(!io.toString().equals(x.toString()))
-						//			if(io.toString().contains(x.getEdge().getV2().toString()))
-							//		{	System.out.println("This is now checking every operator:"+io);
+	
 							if(size.getKey()==0.71)
 								BindDep = x.getEdge().getV1();//}
 								else
@@ -424,13 +420,21 @@ StageGen.kl=0;
 									
 								
 							}
+						if(size.getKey()==0.02 && size.getValue()==0.02) {
+							 operators_BushyTree.add(new HashJoin(x.getEdge()));
+							 operators_BushyTreeRight.add(new HashJoin(x.getEdge()));
+							 operators_BushyTreeLeft.add(new HashJoin(x.getEdge()));
+							 operators_BushyTreeOrder.add(new HashJoin(x.getEdge()));						
+						
+						}		
 						}
+					
 						}
 				}
 				}
 		//		System.out.println("This is the new Bind to HashJoin in BGPEval11111:"+BindDep);	
-					
-		if(Optimizer.triples[i][7]=="HashJoin" ||Optimizer.triples[i][7]==null) {
+			
+		if(Optimizer.triples[i][7]=="HashJoin" ||Optimizer.triples[i][7]==null )  {
 			 operators_BushyTree.add(new HashJoin(x.getEdge()));
 			 operators_BushyTreeRight.add(new HashJoin(x.getEdge()));
 			 operators_BushyTreeLeft.add(new HashJoin(x.getEdge()));
@@ -439,6 +443,8 @@ StageGen.kl=0;
 			// System.out.println("This is the new HashJoin in BGPEval:"+operators_BushyTree);	
 				
 		}
+		System.out.println("This is the new Bind to HashJoin in BGPEval111112222222:"+"--"+Optimizer.triples[i][7]+"--"+x);	
+		
 		if(Optimizer.triples[i][7]=="BindJoin")
 			{
 			if(BindDep.equals(x.getEdge().getV1()))
@@ -494,15 +500,18 @@ StageGen.kl=0;
 		    }
 				}
 
-
-			//System.out.println("Getting individual operators 4 dep. element:"+"--"+operators_dependent);
+for(EdgeOperator bt:operators_BushyTree)
+			System.out.println("Getting individual operators 4 dep. element:"+"--"+bt);
 			//System.out.println("Getting individual operators 4 element:"+"--"+operators_BushyTree);
 			HashJoinCount=operators_dependent.size();
 
 		String length = "";
 		String[] vv =null;
 		 Iterator<EdgeOperator> l3=	operators_BushyTreeOrder.iterator();
-		while(l3.hasNext()) {
+
+	
+
+		 while(l3.hasNext()) {
 		// BindingSet xz=l1.next();
 		//  while(l1.hasNext()) {
 		      length=l3.next().toString();
@@ -650,9 +659,6 @@ else {
 
 //fjp.shutdownNow();
 
-//for(Entry<List<EdgeOperator>, Integer>  ee:joinGroups2.entrySet()) {
-//System.out.println("this is very good chance:"+ee);	
-//}
 
 int ll=0;
 /////////////////////////////Seperating SourceStatements from Exclusive Group and forming Left/Right Bushy Tree ////////////////////////
@@ -1968,8 +1974,14 @@ for(Entry<EdgeOperator, String> to:TreeOrder.entries())
 		results = null;
 	}
 	public void ExecuteJoins(Optimiser opt,List<EdgeOperator> operators,LinkedListMultimap<EdgeOperator, String>  TreeOrder) {
-			
-		//	while (operators != null) {
+		//	for(EdgeOperator o:operators)
+		//		System.out.println("These are operators>>>>>>>>>>>>>>>>>>>>:"+o);
+		//	for(EdgeOperator jgl:JoinGroupsListRight)
+		//		System.out.println("These are list right>>>>>>>>>>>>>>>>>>>>:"+jgl);
+		//	for(EdgeOperator jgr:JoinGroupsListLeft)
+		//		System.out.println("These are list left>>>>>>>>>>>>>>>>>>>>:"+jgl);
+
+				//	while (operators != null) {
 					
 			////logger.info("Tis is the latest EdgeOperator List:"+prepareBushyTree(operators));	
 		//	Iterator<EdgeOperator> x = operators.iterator();
@@ -1994,13 +2006,10 @@ for(Entry<EdgeOperator, String> to:TreeOrder.entries())
 			
 			for(EdgeOperator e:JoinGroupsListRight)
 			{		
-				//TreeType.put(e, 0);
 				Map<EdgeOperator,Integer> t = new HashMap<>();
-				t.put(e, 0);
-		
+				t.put(e, 0);		
 				exchangeOfElements.put(e,t);
 				finalResultRight.put(e,null);
-		//	orderingElements.put(e, e);	
 			}
 			
 			for(EdgeOperator e:JoinGroupsListLeft)
@@ -2009,7 +2018,6 @@ for(Entry<EdgeOperator, String> to:TreeOrder.entries())
 				t.put(e, 0);
 				exchangeOfElements.put(e,t);
 				finalResultLeft.put(e,null);
-		//	orderingElements.put(e, e);	
 			}
 			System.out.println("This is here now:");
 
@@ -2110,6 +2118,7 @@ int n=0;
 				LinkedHashMap<EdgeOperator, List<Binding>>  TempHash	=	new LinkedHashMap<>() ;
 				Temp.putAll(finalResult);
 		Temp.putAll(finalResultLeft);
+		
 		Temp.putAll(finalResultRight);
 	
 		for(EdgeOperator bo:operators_BushyTreeOrder)
@@ -3711,7 +3720,7 @@ public void enableBindJoins(HashSet<List<EdgeOperator>> JoinGroupLists) {
 			ProcessedVertex.add(be.getStartVertex());
 		}
 	System.out.println("These are bindedges:"+BindEdges);
-	System.out.println("These are pvertex:"+ProcessedVertex);
+	
 	
 	for(EdgeOperator be:BindEdges)
 		for(EdgeOperator he:BindEdges)
@@ -3735,30 +3744,46 @@ temp.put(be.getEdge().getV1(), he.getEdge());
 	
 	for(Entry<ConcurrentHashMap<Vertex, Edge>, ArrayList<Binding>> obt:StartBindingFinal.entrySet())
 		System.out.println("This is StartBindingFinal value:"+obt);
-	
+	System.out.println("These are pvertex:"+ProcessedVertex);
 	//	StartBindingFinal.put(temp, null);
-	
+	for(Vertex pv:ProcessedVertex)
+	ProcessedVertexT.add(Var.alloc(pv.getNode()));
 		for(EdgeOperator e1:HashEdges)
 		{			if(ProcessedVertex.contains(e1.getEdge().getV1())){
 						BindJoin a =new BindJoin(e1.getEdge().getV1(),e1.getEdge());
 						if(JoinGroupsListLeft.contains(e1))
 						{	JoinGroupsListLeft.remove(e1);
 						JoinGroupsListLeft.add(a);
+						finalResultLeft.remove(e1);
+						
+						finalResultLeft.put(a,null);
 						}
 						if(JoinGroupsListRight.contains(e1))
 						{	JoinGroupsListRight.remove(e1);
+						finalResultRight.remove(e1);
+						
+						finalResultRight.put(a,null);
 						JoinGroupsListRight.add(a);
 						}
 						} 
+		
 					if(ProcessedVertex.contains(e1.getEdge().getV2())) {
 						BindJoin a =new BindJoin(e1.getEdge().getV2(),e1.getEdge());
 						if(JoinGroupsListLeft.contains(e1))
 						{	JoinGroupsListLeft.remove(e1);
 						JoinGroupsListLeft.add(a);
+						finalResultLeft.remove(e1);
+						
+						finalResultLeft.put(a,null);
+				
 						}
 						if(JoinGroupsListRight.contains(e1))
 						{	JoinGroupsListRight.remove(e1);
 						JoinGroupsListRight.add(a);
+	finalResultRight.remove(e1);
+						
+						finalResultRight.put(a,null);
+				
 						}
 
 					}

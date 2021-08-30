@@ -232,7 +232,7 @@ public static LinkedHashMap<List<EdgeOperator>,List<Binding>> JoinedTriplesUnion
 		//	log.debug("1232131231231231232112321312312312321312323213123123213");
 		ForkJoinPool fjp = new ForkJoinPool();
 			try {
-				fjp.submit(()->IntermediateProcedure(HashJoin.results)).get();
+				fjp.submit(()->IntermediateProcedure(HashJoin.results,HashJoin.AllEdges)).get();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1230,7 +1230,7 @@ fjp21.shutdown();
 		 JoinedTriples.put(ListEdges,Union);}
 }
 }
-static void IntermediateProcedure(List<Binding> results) {
+static void IntermediateProcedure(List<Binding> results,List<EdgeOperator> AllEdges) {
 	Set<Binding>	temp1 = new HashSet<>();
 	
 	///	results = QueryUtil.join(results, start.getBindings());
@@ -1243,13 +1243,13 @@ static void IntermediateProcedure(List<Binding> results) {
 				System.out.println("This is end 23 set Alledges in HashJoin:"+ae);
 					for(Entry<Vertex, Edge> ev:e.getKey().entrySet())
 					{joinVars=null;
-					System.out.println("This is end 24 set Alledges equal in HashJoin:"+ae.getEdge()+"--"+ev.getValue());
+					System.out.println("This is euqality of AllEdges Vertex:"+ae.getEdge()+"--"+ev.getValue());
 						
 					if(ev.getValue().toString().equals(ae.getEdge().toString())) {
-						//for(Entry<Vertex, List<Binding>> e1:BGPEval.StartBinding123.entrySet())
-							//		if(e1.getKey().toString().equals(ev.getKey().toString()))
-						//				if(e1.getValue()!=null)
-						//					return;
+						//for(Entry<Vertex, Set<Binding>> e1:BGPEval.StartBinding123.entrySet())
+					//				if(e1.getKey().toString().equals(ev.getKey().toString()))
+					//					if(e1.getValue()!=null)
+					//					return;
 						System.out.println("This is end 25 set Alledges equal in HashJoin:"+ae.getEdge()+"--"+ev.getValue());
 									
 							Iterator<Var> l = results.iterator().next().vars();

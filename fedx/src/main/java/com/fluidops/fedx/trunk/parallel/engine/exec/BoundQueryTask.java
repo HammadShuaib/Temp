@@ -66,13 +66,20 @@ public synchronized Binding getBindings(){
 	//bin.clear();
 //		TripleExecution.i++;
 		//synchronized(bindings) {
+		List<Binding> bs= new ArrayList<Binding>();
 		 Node subject,object,predicate;
-		
+//		 if(BindJoin.MultipleBinding!=null)
+//for(Entry<Binding, Binding> i:BindJoin.MultipleBinding.entries())
+//	if(i.getValue().equals(this.bindings))
+//		bs.addAll(BindJoin.MultipleBinding.get(i.getKey()));
+//	 System.out.println("This is doubly query being processed::"+bs+"--"+this.bindings+"--"+bs.size());
+		 
 		Query query = new Query();
 		ElementGroup elg = new ElementGroup();
 				Binding binding = this.bindings;
 				// BGPEval.JoinGroupsList.stream().
-		if (getBusyTreeTriple() != null) {
+		//if(bs.isEmpty()|| bs==null) {
+				if (getBusyTreeTriple() != null ) {
 			// int ced=0;
 
 			for (EdgeOperator btt : getBusyTreeTriple()) {
@@ -105,31 +112,70 @@ public synchronized Binding getBindings(){
 //		ced++;
 //}		
 			}
-		} else {
-			subject= QueryUtil.replacewithBinding(triple.getSubject(), binding);
-			predicate = QueryUtil.replacewithBinding(triple.getPredicate(), binding);
-			object = QueryUtil.replacewithBinding(triple.getObject(), binding);
-	///		Stream.of(ReplaceLabelInQueries(subject,object,predicate,binding));
-			//Node;
-			//Node 
-			if (subject.isVariable()) {
-				subject = Var.alloc(subject.getName() );
-			}
-
-			if (predicate.isVariable()) {
-				predicate = Var.alloc(predicate.getName()  );
-			}
-
-			if (object.isVariable()) {
-				object = Var.alloc(object.getName() );
-			}
-
-			Triple newtriple = new Triple(subject, predicate, object);
-	//		ElementGroup elg = new ElementGroup();
-			
-			elg.addTriplePattern(newtriple);
 		}
-		query.setQueryResultStar(true);
+				else {
+					subject= QueryUtil.replacewithBinding(triple.getSubject(), binding);
+					predicate = QueryUtil.replacewithBinding(triple.getPredicate(), binding);
+					object = QueryUtil.replacewithBinding(triple.getObject(), binding);
+			///		Stream.of(ReplaceLabelInQueries(subject,object,predicate,binding));
+					//Node;
+					//Node 
+					if (subject.isVariable()) {
+						subject = Var.alloc(subject.getName() );
+					}
+
+					if (predicate.isVariable()) {
+						predicate = Var.alloc(predicate.getName()  );
+					}
+
+					if (object.isVariable()) {
+						object = Var.alloc(object.getName() );
+					}
+
+					Triple newtriple = new Triple(subject, predicate, object);
+			//		ElementGroup elg = new ElementGroup();
+					
+					elg.addTriplePattern(newtriple);
+				}
+		
+	//	}
+/*		else if(bs!=null) {
+		ElementUnion eu = new ElementUnion();
+			for(int i=0;i<bs.size();i++) {
+				Binding binding1 = bs.get(i);
+				Node subject1 = QueryUtil.replacewithBinding(triple.getSubject(), binding1);
+				Node predicate1 = QueryUtil.replacewithBinding(triple.getPredicate(), binding1);
+				Node object1 = QueryUtil.replacewithBinding(triple.getObject(), binding1);
+				if(subject1.isVariable()) {
+					subject1 = Var.alloc(subject1.getName());
+				}
+				
+				if(predicate1.isVariable()) {
+					predicate1 = Var.alloc(predicate1.getName());
+				}
+				
+				if(object1.isVariable()) {
+					object1 = Var.alloc(object1.getName());
+				}
+				
+				Triple newtriple = new Triple(subject1,predicate1,object1);
+				ElementTriplesBlock tb = new ElementTriplesBlock();
+				tb.addTriple(newtriple);
+				eu.addElement(tb);
+			}
+			
+			List<Element> elements = eu.getElements();
+			
+			if(elements.size() > 1) {
+				elg.addElement(eu);
+			}
+			else {
+				elg.addTriplePattern(((ElementTriplesBlock)elements.get(0)).getPattern().get(0));
+			}
+			
+		System.out.println("This is the query:"+elg );
+		}*/
+				query.setQueryResultStar(true);
 		query.setQueryPattern(elg);
 		query.setQuerySelectType();
 		
@@ -331,7 +377,7 @@ String s3 = null;
 					      if((rrr1.endsWith("\n")) && rrr1.startsWith("<"))
 					      {		s1=rrr1.replace("\n", "");
 						   	 extend.add(Var.alloc(triple.getSubject().toString().substring(1)), StageGen.StringConversion(s1.replace("<", "").replace(">", "")));
-						     System.out.println("This is extend3.1:"+triple.getSubject()+"--"+extend);		
+						 //    System.out.println("This is extend3.1:"+triple.getSubject()+"--"+extend);		
 					      }
 					    
 								 
@@ -345,10 +391,10 @@ String s3 = null;
 						if(a==9)
 						{	s1=rrr1;
 						 extend.add(Var.alloc(triple.getObject().toString().substring(1)), StageGen.StringConversion(s1.replace("<", "").replace(">", "")));
-						 System.out.println("This is extend3.2:"+triple.getObject()+"--"+extend);
+					//	 System.out.println("This is extend3.2:"+triple.getObject()+"--"+extend);
 						   	
 						} 
-						System.out.println("This is extend3.3:"+a+"--"+rrr1);
+				//		System.out.println("This is extend3.3:"+a+"--"+rrr1);
 						 }
 			    		a++;
 				 }}
@@ -360,7 +406,7 @@ String s3 = null;
 				//	  int asciiValue = rr.charAt(i);
 				//	  System.out.println("This is the ascii value:"+rr.charAt(i) + "=" + asciiValue);
 				//	}
-					System.out.println("This is extend:"+rr+"--"+extend+"--"+s1);	
+				//	System.out.println("This is extend:"+rr+"--"+extend+"--"+s1);	
 					//			if(s1t==1)
 					//			else
 						//			extend.add(Var.alloc(triple.getObject().toString().substring(1)), StageGen.StringConversion(s1.replace("<", "").replace(">", "")));
