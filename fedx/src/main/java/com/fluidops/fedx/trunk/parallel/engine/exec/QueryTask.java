@@ -172,8 +172,7 @@ public class QueryTask {
 		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "ERROR");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "ERROR");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.headers", "ERROR");
-		ab++;
-
+	
 		// ////System.out.println("Normal QueryTask is being used:"+triple);
 		// ForkJoinPool fjp = new ForkJoinPool(3);
 		// fjp.invoke(fjp.submit(()->{

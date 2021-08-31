@@ -53,12 +53,13 @@ import com.fluidops.fedx.algebra.StatementSource;
 import com.fluidops.fedx.cache.Cache;
 import com.fluidops.fedx.structures.Endpoint;
 import com.fluidops.fedx.structures.QueryInfo;
+
 public class Optimizer {
 //private	static final org.apache.log4j.Logger logger = LogManager.getLogger(Optimizer.class.getName());
-public static	LinkedHashMap<Integer,LinkedHashMap<Double,Double>> JoinValues= new LinkedHashMap<>();
-public static	LinkedHashMap<String,HashMap<Var,Var>> JoinVars= new LinkedHashMap<>();
-public static TupleExpr query;
-public static HashMap<String,Set<Endpoint>> EndpointRef =new HashMap<>();
+	public static LinkedHashMap<Integer, LinkedHashMap<Double, Double>> JoinValues = new LinkedHashMap<>();
+	public static LinkedHashMap<String, HashMap<Var, Var>> JoinVars = new LinkedHashMap<>();
+	public static TupleExpr query;
+	public static HashMap<String, Set<Endpoint>> EndpointRef = new HashMap<>();
 	private static List<String> StatementPatternArray = new ArrayList<>();
 	static GenericInfoOptimizer info = null;
 
@@ -74,10 +75,10 @@ public static HashMap<String,Set<Endpoint>> EndpointRef =new HashMap<>();
 	public static ConcurrentHashMap<String, Long> tripleCount1 = new ConcurrentHashMap<String, Long>();
 	static List<StatementSource> sources;
 	static StatementPattern stmt;
-static	LinkedHashMap<Double,Double> xyz1 = new LinkedHashMap<>();;
-static LinkedHashMap<Integer, ArrayList<HashMap<Var, Var>>> xyz = new LinkedHashMap<>();;
-	
-	static int balance ;
+	static LinkedHashMap<Double, Double> xyz1 = new LinkedHashMap<>();;
+	static LinkedHashMap<Integer, ArrayList<HashMap<Var, Var>>> xyz = new LinkedHashMap<>();;
+
+	static int balance;
 	static int balance1;
 
 	static double objectCount;
@@ -88,7 +89,7 @@ static LinkedHashMap<Integer, ArrayList<HashMap<Var, Var>>> xyz = new LinkedHash
 	public static ConcurrentHashMap<String, Long> tCount;
 	public static ConcurrentHashMap<StatementPattern, List<StatementSource>> sourceSelection1;
 	static BindingSet binding;
-public static QueryInfo qInfo;	
+	public static QueryInfo qInfo;
 	public static int ExhOpt = 0;
 	public static ConcurrentHashMap<String, String> subobj = new ConcurrentHashMap<String, String>();
 	public static String obj;
@@ -96,8 +97,9 @@ public static QueryInfo qInfo;
 	public static SourceSelection sourceSelection;
 	static ArrayList<String> curQuery = new ArrayList<>();
 	public static Object[][] triples = new Object[50][9];
-   // private ArrayList<String> EndpointArray = new ArrayList<>();
-public static	List<Endpoint> members;
+	// private ArrayList<String> EndpointArray = new ArrayList<>();
+	public static List<Endpoint> members;
+
 	public static TupleExpr optimize(TupleExpr parsed, Dataset dataset, BindingSet bindings,
 			StrictEvaluationStrategy strategy, QueryInfo queryInfo) {
 //org.apache.log4j.Logger.getRootLogger().setLevel(Level.OFF);
@@ -109,25 +111,27 @@ public static	List<Endpoint> members;
 
 		FedX fed = queryInfo.getFederation();
 		members = queryInfo.getFedXConnection().getEndpoints();
-	//	for(Endpoint m :members)
-	//	//logger.info("These are the members in Optimisers:"+m);
+		// for(Endpoint m :members)
+		// //logger.info("These are the members in Optimisers:"+m);
 		// if the federation has a single member only, evaluate the entire query there
-	//	if (members.size() == 1 && queryInfo.getQuery() != null)
-	//		return new SingleSourceQuery(parsed, members.get(0), queryInfo);
+		// if (members.size() == 1 && queryInfo.getQuery() != null)
+		// return new SingleSourceQuery(parsed, members.get(0), queryInfo);
 
 		// Clone the tuple expression to allow for more aggressive optimizations
-		 query = new QueryRoot(parsed.clone());
+		query = new QueryRoot(parsed.clone());
 		// TupleExpr query1 = new QueryRoot(parsed.clone());
-		//logger.trace("88787878787878787878787878787878787878787878787 Before Optimizer:" + queryInfo + "--"
-		//		+ query + "--" + bindings);
+		// logger.trace("88787878787878787878787878787878787878787878787 Before
+		// Optimizer:" + queryInfo + "--"
+		// + query + "--" + bindings);
 
 		Cache cache = fed.getCache();
 
-		//if (logger.isTraceEnabled())
-		//	logger.trace("Query before Optimization: " + query);
+		// if (logger.isTraceEnabled())
+		// logger.trace("Query before Optimization: " + query);
 
 		/* original sesame optimizers */
-	//	new ConstantOptimizer(strategy).optimize(query, dataset, bindings); // maybe remove this optimizer later
+		// new ConstantOptimizer(strategy).optimize(query, dataset, bindings); // maybe
+		// remove this optimizer later
 
 //		new DisjunctiveConstraintOptimizer().optimize(query, dataset, bindings);
 
@@ -142,44 +146,42 @@ public static	List<Endpoint> members;
 		 */
 
 		/* custom optimizers, execute only when needed */
-ForkJoinPool fjp = new ForkJoinPool();
-		fjp.submit(()->	info = new GenericInfoOptimizer(queryInfo));
-		
-fjp.shutdown();
+		ForkJoinPool fjp = new ForkJoinPool();
+		fjp.submit(() -> info = new GenericInfoOptimizer(queryInfo));
+
+		fjp.shutdown();
 		// collect information and perform generic optimizations
-ForkJoinPool fjp1 = new ForkJoinPool();
-fjp1.submit(()->
-		info.optimize(query));
-fjp1.shutdown();
+		ForkJoinPool fjp1 = new ForkJoinPool();
+		fjp1.submit(() -> info.optimize(query));
+		fjp1.shutdown();
 		// Source Selection: all nodes are annotated with their source
 		long srcTime = System.currentTimeMillis();
-		////logger.info("These are the members in Optimisers1:"+members);
+		//// logger.info("These are the members in Optimisers1:"+members);
 //	ForkJoinPool fjp2 = new ForkJoinPool(6);
 //fjp2.submit(()->		
-Stream.of(sourceSelection = (SourceSelection) Util.instantiate(fed.getConfig().getSourceSelectionClass(),
+		Stream.of(sourceSelection = (SourceSelection) Util.instantiate(fed.getConfig().getSourceSelectionClass(),
 				members, cache, queryInfo)).parallel();
 //fjp2.shutdown();
 		// Class.forName(Config.getSourceSelectionClass()).newInstance();
 		// SourceSelection sourceSelection = new SourceSelection(members, cache,
 		// queryInfo);
-	//	//logger.info("This is before optimization:" + info.getStatements());
-		//for(List<StatementPattern> i: info.getStatements())
-		//	//logger.info("These are the members in Optimisers1:"+i);
+		// //logger.info("This is before optimization:" + info.getStatements());
+		// for(List<StatementPattern> i: info.getStatements())
+		// //logger.info("These are the members in Optimisers1:"+i);
 		ForkJoinPool fjp3 = new ForkJoinPool();
-	try {
-		fjp3.submit(()->
-		sourceSelection.performSourceSelection(info.getStatements())).get();
-	} catch (InterruptedException e3) {
-		// TODO Auto-generated catch block
-		e3.printStackTrace();
-	} catch (ExecutionException e3) {
-		// TODO Auto-generated catch block
-		e3.printStackTrace();
-	}
-fjp3.shutdown();
-	// //logger.info("This is before optimization:"+info.getStatements());
-	//	long srcSelTime = System.currentTimeMillis() - srcTime;
-	//	queryInfo.getSourceSelection().time = srcSelTime;
+		try {
+			fjp3.submit(() -> sourceSelection.performSourceSelection(info.getStatements())).get();
+		} catch (InterruptedException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+		} catch (ExecutionException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+		}
+		fjp3.shutdown();
+		// //logger.info("This is before optimization:"+info.getStatements());
+		// long srcSelTime = System.currentTimeMillis() - srcTime;
+		// queryInfo.getSourceSelection().time = srcSelTime;
 //		//logger.info("Source Selection Time " + (srcSelTime));
 
 //	    try {
@@ -225,8 +227,9 @@ fjp3.shutdown();
 		// if the query has a single relevant source (and if it is no a SERVICE query),
 		// evaluate at this source only
 
-		////logger.info(
-		//		"90909090909090909090909090909090909090909090StatementGroupOptmization in Optimizer--------------------------------- ");
+		//// logger.info(
+		// "90909090909090909090909090909090909090909090StatementGroupOptmization in
+		//// Optimizer--------------------------------- ");
 
 		List<Triple> StatementPatternArray = new ArrayList<>();
 		List<Triple> TripleArray;
@@ -242,28 +245,29 @@ fjp3.shutdown();
 
 		for (Endpoint epointname : sourceSelection.getRelevantSources()) {
 			EndpointArrayE.add(epointname);
-		//	//logger.info(
-		//			"111536456456!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UPDATESTRATEGY-------------------------FedXConnection"
-		//					+ "--" + epointname.getName() + "--" + epointname.getEndpoint() + "--"
-		//					+ stmtToSources.entrySet()+"--"+stmtToSources.values()+"--"+stmtToSources.keySet());
+			// //logger.info(
+			// "111536456456!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!UPDATESTRATEGY-------------------------FedXConnection"
+			// + "--" + epointname.getName() + "--" + epointname.getEndpoint() + "--"
+			// +
+			// stmtToSources.entrySet()+"--"+stmtToSources.values()+"--"+stmtToSources.keySet());
 		}
 		ForkJoinPool fjp6 = new ForkJoinPool();
-		sourceSelection1 = fjp6.submit(()->
-		SourceSelection.getStmtToSources()).join();
+		sourceSelection1 = fjp6.submit(() -> SourceSelection.getStmtToSources()).join();
 		fjp6.shutdown();
-	//	for( Entry<StatementPattern, List<StatementSource>> e:SourceSelection.getStmtToSources().entrySet())
-	//	{	for(StatementSource f:e.getValue())
-	//		//logger.info("This is now a new headache:" + e.getKey()+"--"+f.getEndpointID());
-	//	}
-
+		// for( Entry<StatementPattern, List<StatementSource>>
+		// e:SourceSelection.getStmtToSources().entrySet())
+		// { for(StatementSource f:e.getValue())
+		// //logger.info("This is now a new headache:" +
+		// e.getKey()+"--"+f.getEndpointID());
+		// }
 
 		// ReverseListIterator itr = new
 		// ReverseListIterator(SourceSelection.getStmtToSources().entrySet());
 		// List<String> reversedList =
 		// Lists.reverse(SourceSelection.getStmtToSources().entrySet());
 		/*
-		 * for (int i = keyList.size() - 1; i >= 0; i--) { //logger.info("Key :: "
-		 * + keyList.getKey(i)); }
+		 * for (int i = keyList.size() - 1; i >= 0; i--) { //logger.info("Key :: " +
+		 * keyList.getKey(i)); }
 		 */
 		// getting keySet() into Set
 		// Set<StatementPattern> set = SourceSelection.getStmtToSources().keySet();
@@ -287,78 +291,103 @@ fjp3.shutdown();
 //ForkJoinPool fjp12 = new ForkJoinPool(6);
 //fjp12.submit(()->
 
-	new JoinOrderOptimizer2(queryInfo,sourceSelection1).meetOther(query);//);
+		new JoinOrderOptimizer2(queryInfo, sourceSelection1).meetOther(query);// );
 		qInfo = queryInfo;
-			
-		for(Entry<LinkedHashMap<Double, Double>, LinkedHashMap<Integer, ArrayList<HashMap<Var, Var>>>> e:JoinOrderOptimizer2.JoinVar.entrySet()) {
-			
-		//for(Entry<LinkedHashMap<Double, Double>, TupleExpr> e1:JoinOrderOptimizer2.Join.entrySet())
-	//	{
-			//for(Entry<Double, Double> f:e.getKey().entrySet())
-	//		//logger.info("These are the optimizsers in BGPEval:"+e1.getValue()+"--"+e1.getKey());
-	//		//logger.info("-------------------------------------------------------------------------------------------------------");
-			
-	//	}
-		////logger.info("These are the optimizsers in BGPEval:"+JoinOrderOptimizer2.JoinVar.entrySet());
-		{	
-		//	for(Entry<Double, Double> f:e.getKey().entrySet())
-		//	//logger.info("These are the optimizsers in BGPEval:"+e.getValue()+"--"+e.getKey());
-		//	//logger.info("-------------------------------------------------------------------------------------------------------");
-		//	for(Entry<Double, Double> JoinType:e.getKey().entrySet())
-				
-				int balance=0;
-				for(Entry<Double, Double> f1:e.getKey().entrySet()){
-						{
-						for(Entry<Integer, ArrayList<HashMap<Var, Var>>>  f2:e.getValue().entrySet()) {
-							xyz=	e.getValue();
-							xyz1= e.getKey();
-						}
-						}
-				}			}//		Entry<Double, Double> FirstType = e.getKey().entrySet().iterator().next();
-	//	Entry<Integer, ArrayList<Map<Var, Var>>> FirstVars = e.getValue().entrySet().iterator().next();
-			
-	//	}
-//		while(e.getKey().entrySet().iterator().hasNext()) {
-	//		while(e.getValue().values().iterator().hasNext()) {
-	//		}
-		
-		////logger.info("These are the seconds in new Type of Boundaries:"+SecondType+"--"+SecondVars);
-				break;
-		}
-	//	//logger.info("These are the firsts in new Type of Boundaries2:"+xyz1);
 
-		for( Entry<Double, Double> f1:xyz1.entrySet()) {
-			balance1++;
-				LinkedHashMap<Double, Double> v=new LinkedHashMap<>();
-				v.put(f1.getKey(), f1.getValue());
-			JoinValues.put(balance1,v);
-	//		//logger.info("These are the firsts in new Type of Boundaries:"+f1+"--"+balance1);
+		for (Entry<LinkedHashMap<Double, Double>, LinkedHashMap<Integer, ArrayList<HashMap<Var, Var>>>> e : JoinOrderOptimizer2.JoinVar
+				.entrySet()) {
+
+			// for(Entry<LinkedHashMap<Double, Double>, TupleExpr>
+			// e1:JoinOrderOptimizer2.Join.entrySet())
+			// {
+			// for(Entry<Double, Double> f:e.getKey().entrySet())
+			// //logger.info("These are the optimizsers in
+			// BGPEval:"+e1.getValue()+"--"+e1.getKey());
+			// //logger.info("-------------------------------------------------------------------------------------------------------");
+
+			// }
+			//// logger.info("These are the optimizsers in
+			// BGPEval:"+JoinOrderOptimizer2.JoinVar.entrySet());
+
+			{
+				// for(Entry<Double, Double> f:e.getKey().entrySet())
+				// //logger.info("These are the optimizsers in
+				// BGPEval:"+e.getValue()+"--"+e.getKey());
+				// //logger.info("-------------------------------------------------------------------------------------------------------");
+				// for(Entry<Double, Double> JoinType:e.getKey().entrySet())
+
+				int balance = 0;
+
+				xyz = e.getValue();
+				xyz1 = e.getKey();
+
+			} // Entry<Double, Double> FirstType = e.getKey().entrySet().iterator().next();
+			// Entry<Integer, ArrayList<Map<Var, Var>>> FirstVars =
+			// e.getValue().entrySet().iterator().next();
+
+			// }
+//		while(e.getKey().entrySet().iterator().hasNext()) {
+			// while(e.getValue().values().iterator().hasNext()) {
+			// }
+
+			//// logger.info("These are the seconds in new Type of
+			//// Boundaries:"+SecondType+"--"+SecondVars);
+			break;
 		}
-		for(ArrayList<HashMap<Var, Var>> f:xyz.values())
-		{	
-			
-		balance++;	
-			for( HashMap<Var, Var> f1:f) {
-			JoinVars.put(balance+"--"+f1,f1);
-						
+		// //logger.info("These are the firsts in new Type of Boundaries2:"+xyz1);
+
+		for (Entry<Double, Double> f1 : xyz1.entrySet()) {
+			balance1++;
+			LinkedHashMap<Double, Double> v = new LinkedHashMap<>();
+			v.put(f1.getKey(), f1.getValue());
+			JoinValues.put(balance1, v);
+			// //logger.info("These are the firsts in new Type of
+			// Boundaries:"+f1+"--"+balance1);
+		}
+		for (ArrayList<HashMap<Var, Var>> f : xyz.values()) {
+
+			balance++;
+			for (HashMap<Var, Var> f1 : f) {
+				JoinVars.put(balance + "--" + f1, f1);
+
 			}
 		}
-		////logger.info("These are the firsts in new Type of Boundaries:"+JoinVars);
-		////logger.info("These are the firsts in new Type of Boundaries:"+JoinValues);
+		//// logger.info("These are the firsts in new Type of Boundaries:"+JoinVars);
+		//// logger.info("These are the firsts in new Type of Boundaries:"+JoinValues);
 		for (Entry<StatementPattern, List<StatementSource>> stmts : SourceSelection.getStmtToSources().entrySet()) {
-			System.out.println("These are the statement and sources:"+stmts);
+			System.out.println("These are the statement and sources:" + stmts);
 		}
-		
+
 		for (Entry<StatementPattern, List<StatementSource>> stmts : SourceSelection.getStmtToSources().entrySet()) {
 			// for(StatementPattern strKey : alKeys){
 			stmt = stmts.getKey();
 			// strKey;
 			sources = stmts.getValue();
 			// SourceSelection.getStmtToSources().get(strKey);
-		//	//logger.info("This is the stmt:"+stmt);
-			
+			// //logger.info("This is the stmt:"+stmt);
+			int counter = 0;
+			String equal = "";
+			for (Entry<String, Set<String>> stmts1 : JoinOrderOptimizer2.joinType.entries()) {
+				
+					for (String st : stmts1.getValue()) {
+					//	System.out.println("This is stmt in var:"+ stmt.getSubjectVar().getName()+"--"+st+"--"+ stmt.getObjectVar().getName());
+						if ((stmt.getSubjectVar().getName().equals(st) || stmt.getObjectVar().getName().equals(st))
+								&& !equal.equals(st)) {
+							counter++;
+							equal = st;
+						}
+						if (counter == 2) {
+							triples[i][7]=stmts1.getKey();
+							break;
+						}
+					}
+				
+				if (counter == 2) {
+					break;
+				}
+			}
 
-					subobj.put(stmt.getSubjectVar().getName(), stmt.getObjectVar().getName());
+			subobj.put(stmt.getSubjectVar().getName(), stmt.getObjectVar().getName());
 			subjectCount1.put(stmt.getSubjectVar().getName() + "--" + stmt.getObjectVar().getName(),
 					((Summary) (queryInfo.getFedXConnection().getSummary())).getTriplePatternSubjectMVKoef(stmt,
 							sources));
@@ -368,21 +397,22 @@ fjp3.shutdown();
 			tripleCount1.put(stmt.getSubjectVar().getName() + "--" + stmt.getObjectVar().getName(),
 					((Summary) (queryInfo.getFedXConnection().getSummary())).getTriplePatternCardinality(stmt,
 							sources));
-			/*//logger.info("This is the blunder that is troubling me222222222222222222222222222222222222:"
-					+ ((Summary) (queryInfo.getFedXConnection().getSummary())).getTriplePatternSubjectMVKoef(stmt,
-							sources)
-					+ "--"
-					+ ((Summary) (queryInfo.getFedXConnection().getSummary())).getTriplePatternObjectMVKoef(stmt,
-							sources)
-					+ "--"
-					+ ((Summary) (queryInfo.getFedXConnection().getSummary())).getTriplePatternCardinality(stmt,
-							sources)
-					+ "--" + stmt.getSubjectVar().getName() + "--" + stmt.getObjectVar().getName() + "--"
-					+ SourceSelection.getStmtToSources().entrySet());
-			*/
+			/*
+			 * //logger.
+			 * info("This is the blunder that is troubling me222222222222222222222222222222222222:"
+			 * + ((Summary)
+			 * (queryInfo.getFedXConnection().getSummary())).getTriplePatternSubjectMVKoef(
+			 * stmt, sources) + "--" + ((Summary)
+			 * (queryInfo.getFedXConnection().getSummary())).getTriplePatternObjectMVKoef(
+			 * stmt, sources) + "--" + ((Summary)
+			 * (queryInfo.getFedXConnection().getSummary())).getTriplePatternCardinality(
+			 * stmt, sources) + "--" + stmt.getSubjectVar().getName() + "--" +
+			 * stmt.getObjectVar().getName() + "--" +
+			 * SourceSelection.getStmtToSources().entrySet());
+			 */
 			if (stmt.getSubjectVar().isAnonymous())
 				triples[i][0] = stmt.getSubjectVar().getValue().toString();
-			
+
 			else
 				triples[i][0] = (String) stmt.getSubjectVar().getName();// (new
 			if (stmt.getPredicateVar().isAnonymous())
@@ -395,50 +425,55 @@ fjp3.shutdown();
 				triples[i][1] = stmt.getObjectVar().getName();// (new
 			triples[i][8] = sources;
 			Set<Endpoint> srcs = new HashSet<>();
-			for(StatementSource s:sources) {
+			for (StatementSource s : sources) {
 				srcs.add(EndpointManager.getEndpoint(s.getEndpointID()));
 			}
-			EndpointRef.put(triples[i][0]+"--"+triples[i][1], srcs);
-			for(Entry<String, HashMap<Var, Var>> e:JoinVars.entrySet())
-				for(Entry<Var, Var> f:e.getValue().entrySet())
-				{					//logger.info("This is the joined var with stmt:"+f.getKey()+"--"+f.getValue()+"--"+stmt.getSubjectVar()+"--"+stmt.getObjectVar());
+			EndpointRef.put(triples[i][0] + "--" + triples[i][1], srcs);
+	/*		for (Entry<String, HashMap<Var, Var>> e : JoinVars.entrySet())
+				for (Entry<Var, Var> f : e.getValue().entrySet()) {
+					System.out.println("This is the joined var with stmt:" + f.getKey() + "--" + f.getValue() + "--"
+							+ stmt.getSubjectVar() + "--" + stmt.getObjectVar());
 
-					if(f.getKey().equals(stmt.getSubjectVar())&&f.getValue().equals(stmt.getObjectVar()))
-						{
-					
-								for(Entry<Integer, LinkedHashMap<Double, Double>> jv:JoinValues.entrySet())
-						{		////logger.info("This is the joined value with stmt0000:"+e.getKey()+"--"+jv.getKey());
-						
-									if(Integer.parseInt(StringUtils.substringBefore(e.getKey().toString(), "-"))==jv.getKey()) {
-							System.out.println("This is the joined value with stmt:"+f+"--"+jv.getValue());
-						for(Entry<Double, Double> jt:jv.getValue().entrySet())		
-						{
-					//		System.out.println("This is the size here:"+jt);
-							if(jt.getKey()<jt.getValue())
-						{	
-							//logger.info("HashJoin");
-							
-							triples[i][7] = "HashJoin";// (new
+					if (f.getKey().equals(stmt.getSubjectVar()) && f.getValue().equals(stmt.getObjectVar())) {
+
+						for (Entry<Integer, LinkedHashMap<Double, Double>> jv : JoinValues.entrySet()) { //// logger.info("This
+																											//// is the
+																											//// joined
+																											//// value
+																											//// with
+																											//// stmt0000:"+e.getKey()+"--"+jv.getKey());
+
+							if (Integer.parseInt(StringUtils.substringBefore(e.getKey().toString(), "-")) == jv
+									.getKey()) {
+								System.out.println("This is the joined value with stmt:" + f + "--" + jv.getValue());
+								for (Entry<Double, Double> jt : jv.getValue().entrySet()) {
+									// System.out.println("This is the size here:"+jt);
+									if (jt.getKey() < jt.getValue()) {
+										// logger.info("HashJoin");
+
+										triples[i][7] = "HashJoin";// (new
+									} else {
+										// logger.info("BindJoin");
+
+										triples[i][7] = "BindJoin";// (new
+
+									}
+								}
+							}
 						}
-						else {
-							//logger.info("BindJoin");
-							
-							triples[i][7] = "BindJoin";// (new
-							
-						}						}									
-						}
-						}	
-					
-						}}
-																// StringBuilder()).append("?").append(stmt.getObjectVar().getName());
+
+					}
+				}*/
+			// StringBuilder()).append("?").append(stmt.getObjectVar().getName());
 			triples[i][2] = (double) ((Summary) (queryInfo.getFedXConnection().getSummary()))
 					.getTriplePatternSubjectMVKoef(stmt, sources);
 			triples[i][3] = (double) ((Summary) (queryInfo.getFedXConnection().getSummary()))
 					.getTriplePatternObjectMVKoef(stmt, sources);
 			triples[i][4] = (double) ((Summary) (queryInfo.getFedXConnection().getSummary()))
 					.getTriplePatternCardinality(stmt, sources);
-			System.out.println("These are the values of triples:"+triples[i][0]+"--"+triples[i][6]+"--"+triples[i][1]+"--"+triples[i][7]+"--"+triples[i][8].toString().replaceAll("[^0-9,]",""));
-			
+			System.out.println("These are the values of triples:" + triples[i][0] + "--" + triples[i][6] + "--"
+					+ triples[i][1] + "--" + triples[i][7]);
+
 			// sCount.put(triples[i][0]+"--"+triples[i][1],
 			// ((Summary)(queryInfo.getFedXConnection().getSummary())).getTriplePatternSubjectMVKoef(stmt,
 			// sources)-(int)triples[i][2]);
@@ -461,7 +496,7 @@ fjp3.shutdown();
 			// }
 
 			// sources = stmts.getValue();
-		//	ids = getEndpoints();
+			// ids = getEndpoints();
 			// ids1=((Summary)(queryInfo.getFedXConnection().getSummary())).lookupSources(stmt);
 			// //logger.info("This is now in statementSources:"+sources1);
 			/*
@@ -471,8 +506,7 @@ fjp3.shutdown();
 			 * 
 			 * } for(StatementSource source:sources) { es1 = new
 			 * ExclusiveStatement(stmt,source,queryInfo); expr.add(es1);
-			 * //logger.info("This is now where I am stuck:"+es1+"--"+sources+"--"+expr
-			 * ); }
+			 * //logger.info("This is now where I am stuck:"+es1+"--"+sources+"--"+expr ); }
 			 */
 			// }
 
@@ -484,8 +518,7 @@ fjp3.shutdown();
 			 * 
 			 * } ExclusiveStatement es1 = new ExclusiveStatement(stmt,source,queryInfo);
 			 * expr.add(es1);
-			 * ////logger.info("This is now where I am stuck:"+es1+"--"+source+"--"+
-			 * expr);
+			 * ////logger.info("This is now where I am stuck:"+es1+"--"+source+"--"+ expr);
 			 * 
 			 * 
 			 * } }
@@ -506,79 +539,81 @@ fjp3.shutdown();
 
 		// }
 
-	//	for (int j = 0; j < i; j++)
-			// for(int k=0;k<6;k++) {
-		//	System.out.print("This is the blunder that is troubling me33333333333333333333:" + triples[j][0] + "--"
-		//			+ triples[j][1] + "--" + triples[j][2] + "--" + triples[j][3] + "--" + triples[j][4]);
-		//logger.info("");
+		// for (int j = 0; j < i; j++)
+		// for(int k=0;k<6;k++) {
+		// System.out.print("This is the blunder that is troubling
+		// me33333333333333333333:" + triples[j][0] + "--"
+		// + triples[j][1] + "--" + triples[j][2] + "--" + triples[j][3] + "--" +
+		// triples[j][4]);
+		// logger.info("");
 
-
-	//	FedXOptimizer statementGroupOptimizer = (FedXOptimizer) Util
-	//			.instantiate(fed.getConfig().getStatementGroupOptimizerClass(), queryInfo);
+		// FedXOptimizer statementGroupOptimizer = (FedXOptimizer) Util
+		// .instantiate(fed.getConfig().getStatementGroupOptimizerClass(), queryInfo);
 		// NJoin node = new NJoin(expr,queryInfo);
 		//
 		// new StatementGroupOptimizer(queryInfo).meetOther(query);
 		binding = bindings;
-	//	//logger.info(
-	//			"7878787878787878787878787878787878787878787878787878787878787878StatementGroupOptmization in Optimizer2--------------------------------- "
-	//					+ query + "--" + binding);
-		
-	//	StatementGroupOptimizer a = new 
+		// //logger.info(
+		// "7878787878787878787878787878787878787878787878787878787878787878StatementGroupOptmization
+		// in Optimizer2--------------------------------- "
+		// + query + "--" + binding);
+
+		// StatementGroupOptimizer a = new
 //		//logger.info(
 //				"7 This is the value of StatementToSources before: "
 //						+ sourceSelection1);
- 
-	//	System.out.println("88787878787878787878787878787878787878787878787 After Optimizer:" + queryInfo + "--" + query);
-	
-ForkJoinPool fjp13 = new ForkJoinPool();	
-fjp13.submit(()->
 
-new				StatementGroupOptimizer2(queryInfo).meetOther(query));
-fjp13.shutdown();			
-		long k=0;
+		// System.out.println("88787878787878787878787878787878787878787878787 After
+		// Optimizer:" + queryInfo + "--" + query);
 
-	
+		ForkJoinPool fjp13 = new ForkJoinPool();
+		fjp13.submit(() ->
+
+		new StatementGroupOptimizer2(queryInfo).meetOther(query));
+		fjp13.shutdown();
+		long k = 0;
+
 		Set<Endpoint> relevantSources = sourceSelection.getRelevantSources();
 //		if (relevantSources.size() == 1 && !info.hasService()) {
 //			//logger.info("This is now in Optimizer1:");
 //			return new SingleSourceQuery(query, relevantSources.iterator().next(), queryInfo);
 //		}
-	//	if (info.hasService()) {
-	//		//logger.info("This is now in Optimizer2:");
-	//		new ServiceOptimizer(queryInfo).optimize(query);
-	//	}
+		// if (info.hasService()) {
+		// //logger.info("This is now in Optimizer2:");
+		// new ServiceOptimizer(queryInfo).optimize(query);
+		// }
 		// optimize Filters, if available
-	//	if (info.hasFilter()) {
-	//		//logger.info("This is now in Optimizer3:");
-	//		new FilterOptimizer().optimize(query);
-	//	}
+		// if (info.hasFilter()) {
+		// //logger.info("This is now in Optimizer3:");
+		// new FilterOptimizer().optimize(query);
+		// }
 		// optimize unions, if available
-		//if (info.hasUnion) {
-		//	//logger.info("This is now in Optimizer4:");
-		//	new UnionOptimizer(queryInfo).optimize(query);
-		//} // optimize statement groups and join order
+		// if (info.hasUnion) {
+		// //logger.info("This is now in Optimizer4:");
+		// new UnionOptimizer(queryInfo).optimize(query);
+		// } // optimize statement groups and join order
 
-	//	//logger.info(
-	//			"7878787878787878787878787878787878787878787878787878787878787878StatementGroupOptmization in Optimizer1--------------------------------- "
-	//					+ query);
+		// //logger.info(
+		// "7878787878787878787878787878787878787878787878787878787878787878StatementGroupOptmization
+		// in Optimizer1--------------------------------- "
+		// + query);
 
 //		FedXOptimizer statementGroupOptimizer = (FedXOptimizer)Util.instantiate(fed.getConfig().getStatementGroupOptimizerClass(), queryInfo);
 //	new StatementGroupOptimizer(queryInfo).optimize(query);
-	//	//logger.info(
-	//			"7878787878787878787878787878787878787878787878787878787878787878StatementGroupOptmization in Optimizer--------------------------------- "
-	//					+ query);
+		// //logger.info(
+		// "7878787878787878787878787878787878787878787878787878787878787878StatementGroupOptmization
+		// in Optimizer--------------------------------- "
+		// + query);
 
 		// sgo.optimize(query);
 		// new StatementGroupOptimizer(queryInfo).optimize(query);
-/*try {
-	Thread.sleep(450);
-} catch (InterruptedException e1) {
-	// TODO Auto-generated catch block
-	e1.printStackTrace();
-}*/
-		
-	//	new VariableScopeOptimizer(queryInfo).optimize(query);
-	
+		/*
+		 * try { Thread.sleep(450); } catch (InterruptedException e1) { // TODO
+		 * Auto-generated catch block e1.printStackTrace(); }
+		 */
+
+		// new VariableScopeOptimizer(queryInfo).optimize(query);
+
 		return query;
 	}
 
@@ -587,114 +622,107 @@ fjp13.shutdown();
 		for (List<StatementPattern> stmts : query) {
 			for (StatementPattern stmt : stmts) {
 				StatementPatternArray.add(stmt.toString());
-			//	//logger.info("1414141414141414141414141414 These are now StatementPattern:"
-			//			+ StatementPatternArray + "--" + stmt);
+				// //logger.info("1414141414141414141414141414 These are now StatementPattern:"
+				// + StatementPatternArray + "--" + stmt);
 
 			}
 
 		}
 	}
 
-	/*public static void setTriples(List<List<StatementPattern>> query, QueryInfo queryInfo, FedX fed) {
-		Optimizer opt = new Optimizer();
-		QueryProvider qp = new QueryProvider("../queries/");
-	//	SailRepository repo =repo.getConnection().
-		// FedXFactory.initializeSparqlFederation(fed.getConnection(),
-		// opt.getEndpoints());
-		for (List<StatementPattern> stmts : query) {
-			for (StatementPattern stmt : stmts) {
-				List<String> qnames = Arrays.asList(QueryStringUtil.toString(stmt));
-				for (String curQueryName : qnames) {
-					curQuery.add((curQueryName));
-					//logger.info("--------------------12312321423423423This is the query final war: "
-							+ queryInfo.getQuery() + "---" + QueryStringUtil.toString(stmt) + "--" + curQueryName);
-					//
+	/*
+	 * public static void setTriples(List<List<StatementPattern>> query, QueryInfo
+	 * queryInfo, FedX fed) { Optimizer opt = new Optimizer(); QueryProvider qp =
+	 * new QueryProvider("../queries/"); // SailRepository repo
+	 * =repo.getConnection(). //
+	 * FedXFactory.initializeSparqlFederation(fed.getConnection(), //
+	 * opt.getEndpoints()); for (List<StatementPattern> stmts : query) { for
+	 * (StatementPattern stmt : stmts) { List<String> qnames =
+	 * Arrays.asList(QueryStringUtil.toString(stmt)); for (String curQueryName :
+	 * qnames) { curQuery.add((curQueryName)); //logger.
+	 * info("--------------------12312321423423423This is the query final war: " +
+	 * queryInfo.getQuery() + "---" + QueryStringUtil.toString(stmt) + "--" +
+	 * curQueryName); //
+	 * 
+	 * // repo = ; // TupleQuery query1 = //
+	 * repo.getConnection().prepareTupleQuery(QueryLanguage.SPARQL, curQuery); // /
+	 * //logger.
+	 * info("--------------------12312321423423423This is the query final war: "
+	 * +query1+"---"+QueryStringUtil.toString(stmt )); // } // catch (Throwable e) {
+	 * // e.printStackTrace(); // log.error("", e); // } }
+	 * 
+	 * // //logger.info(stmt. ); // NodeFactory. //
+	 * //logger.info("1111111111111111111111111111111111111111111111Here are // the
+	 * nodes now "+NodeFactory.parseNode(stmt.getSubjectVar().toString()) //
+	 * +"--"+NodeFactory.parseNode(stmt.getPredicateVar().getValue().toString())+
+	 * "--"+NodeFactory.parseNode(stmt.getObjectVar().getValue().toString())); //
+	 * //logger.info(); // String a=stmt.getSubjectVar().toString(); /* Triple t =
+	 * Triple.create( NodeFactory.create(stmt.getSubjectVar()),
+	 * NodeFactory.create(stmt.getPredicateVar().toString()),
+	 * NodeFactory.create(stmt.getObjectVar().getValue().toString()));
+	 */
 
-					// repo = ;
-					// TupleQuery query1 =
-					// repo.getConnection().prepareTupleQuery(QueryLanguage.SPARQL, curQuery);
-//				/	//logger.info("--------------------12312321423423423This is the query final war: "+query1+"---"+QueryStringUtil.toString(stmt ));
-					// }
-					// catch (Throwable e) {
-					// e.printStackTrace();
-					// log.error("", e);
-					// }
-				}
-
-				// //logger.info(stmt. );
-				// NodeFactory.
-				// //logger.info("1111111111111111111111111111111111111111111111Here are
-				// the nodes now "+NodeFactory.parseNode(stmt.getSubjectVar().toString())
-				// +"--"+NodeFactory.parseNode(stmt.getPredicateVar().getValue().toString())+"--"+NodeFactory.parseNode(stmt.getObjectVar().getValue().toString()));
-				// //logger.info();
-				// String a=stmt.getSubjectVar().toString();
-				/*
-				 * Triple t = Triple.create( NodeFactory.create(stmt.getSubjectVar()),
-				 * NodeFactory.create(stmt.getPredicateVar().toString()),
-				 * NodeFactory.create(stmt.getObjectVar().getValue().toString()));
-				 */
-
-				// Triple list; //= new ArrayList<>();
-				// Node subject =
-				// NodeFactory.createURI("http://dbpedia.org/resource/Albert_Einstein");
-				// List<Binding> bindings;
-				// bindings.add(stmt.getSubjectVar().toString());
-				// Triple newtriple = new
-				// Triple(stmt.getSubjectVar().toString(),stmt.getPredicateVar().toString(),stmt.getObjectVar().toString());
-				/*
-				 * list.add( Triple.create( NodeFactory.createURI("(triple ?president"),
-				 * NodeFactory.createURI( "<http://dbpedia.org/ontology/director>"),
-				 * NodeFactory.createURI("?director )")));
-				 */ /*
-					 * list.add(Triple.create(
-					 * NodeFactory.createURI("http://dbpedia.org/resource/Albert_Einstein"),
-					 * NodeFactory.createURI("http://dbpedia.org/ontology/birthDate"),
-					 * NodeFactory.createLiteral("1879-03-14", XSDDatatype.XSDdate)));
-					 * 
-					 * list.add(Triple.create(
-					 * NodeFactory.createURI("http://dbpedia.org/resource/Albert_Einstein"),
-					 * RDF.type.asNode(),
-					 * NodeFactory.createURI("http://dbpedia.org/ontology/Physican")));
-					 * list.add(Triple.create(
-					 * NodeFactory.createURI("http://dbpedia.org/resource/Albert_Einstein"),
-					 * RDF.type.asNode(),
-					 * NodeFactory.createURI("http://dbpedia.org/ontology/Musican")));
-					 * list.add(Triple.create(
-					 * NodeFactory.createURI("http://dbpedia.org/resource/Albert_Einstein"),
-					 * NodeFactory.createURI("http://dbpedia.org/ontology/birthDate"),
-					 * NodeFactory.createLiteral("1879-03-14", XSDDatatype.XSDdate)));
-					 
-				// list =Triple.create(Triple.create(("u:John"),
-				// ("u:parentOf"),
-				// ("u:Mary")));//"(project (?president ?party ?page)\r\n" +
-				// " (bgp\r\n" +
-				// " This is now doing the conversion: (triple ?president
-				// <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
-				// <http://dbpedia.org/ontology/President>)\r\n" +
-				// " (triple ?president <http://dbpedia.org/ontology/nationality>
-				// <http://dbpedia.org/resource/United_States>)\r\n" +
-				// " (triple ?president <http://dbpedia.org/ontology/party> ?party)\r\n" +
-				// " (triple ?x <http://data.nytimes.com/elements/topicPage> ?page)\r\n" +
-				// " (triple ?x <http://www.w3.org/2002/07/owl#sameAs> ?president)\r\n" +
-				// " ))");
-
-				// StageGen gen = new StageGen();
-
-				// gen.make((Triple)list);//"[?president http://dbpedia.org/ontology/President,
-				// ?president @http://dbpedia.org/ontology/nationality
-				// http://dbpedia.org/resource/United_States, ?president
-				// @http://dbpedia.org/ontology/party ?party, ?x
-				// @http://data.nytimes.com/elements/topicPage ?page, ?x @owl:sameAs
-				// ?president]");
-
-			}
-
-		}
-	}*/
+	// Triple list; //= new ArrayList<>();
+	// Node subject =
+	// NodeFactory.createURI("http://dbpedia.org/resource/Albert_Einstein");
+	// List<Binding> bindings;
+	// bindings.add(stmt.getSubjectVar().toString());
+	// Triple newtriple = new
+	// Triple(stmt.getSubjectVar().toString(),stmt.getPredicateVar().toString(),stmt.getObjectVar().toString());
+	/*
+	 * list.add( Triple.create( NodeFactory.createURI("(triple ?president"),
+	 * NodeFactory.createURI( "<http://dbpedia.org/ontology/director>"),
+	 * NodeFactory.createURI("?director )")));
+	 */ /*
+		 * list.add(Triple.create(
+		 * NodeFactory.createURI("http://dbpedia.org/resource/Albert_Einstein"),
+		 * NodeFactory.createURI("http://dbpedia.org/ontology/birthDate"),
+		 * NodeFactory.createLiteral("1879-03-14", XSDDatatype.XSDdate)));
+		 * 
+		 * list.add(Triple.create(
+		 * NodeFactory.createURI("http://dbpedia.org/resource/Albert_Einstein"),
+		 * RDF.type.asNode(),
+		 * NodeFactory.createURI("http://dbpedia.org/ontology/Physican")));
+		 * list.add(Triple.create(
+		 * NodeFactory.createURI("http://dbpedia.org/resource/Albert_Einstein"),
+		 * RDF.type.asNode(),
+		 * NodeFactory.createURI("http://dbpedia.org/ontology/Musican")));
+		 * list.add(Triple.create(
+		 * NodeFactory.createURI("http://dbpedia.org/resource/Albert_Einstein"),
+		 * NodeFactory.createURI("http://dbpedia.org/ontology/birthDate"),
+		 * NodeFactory.createLiteral("1879-03-14", XSDDatatype.XSDdate)));
+		 * 
+		 * // list =Triple.create(Triple.create(("u:John"), // ("u:parentOf"), //
+		 * ("u:Mary")));//"(project (?president ?party ?page)\r\n" + // " (bgp\r\n" + //
+		 * " This is now doing the conversion: (triple ?president //
+		 * <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> //
+		 * <http://dbpedia.org/ontology/President>)\r\n" + // " (triple ?president
+		 * <http://dbpedia.org/ontology/nationality> //
+		 * <http://dbpedia.org/resource/United_States>)\r\n" + //
+		 * " (triple ?president <http://dbpedia.org/ontology/party> ?party)\r\n" + //
+		 * " (triple ?x <http://data.nytimes.com/elements/topicPage> ?page)\r\n" + //
+		 * " (triple ?x <http://www.w3.org/2002/07/owl#sameAs> ?president)\r\n" + //
+		 * " ))");
+		 * 
+		 * // StageGen gen = new StageGen();
+		 * 
+		 * // gen.make((Triple)list);//"[?president
+		 * http://dbpedia.org/ontology/President, //
+		 * ?president @http://dbpedia.org/ontology/nationality //
+		 * http://dbpedia.org/resource/United_States, ?president
+		 * // @http://dbpedia.org/ontology/party ?party, ?x
+		 * // @http://data.nytimes.com/elements/topicPage ?page, ?x @owl:sameAs //
+		 * ?president]");
+		 * 
+		 * }
+		 * 
+		 * } }
+		 */
 
 	public static List<String> getSources() {
-		//logger.info(
-		//		"1313131313131313311313131313131These are now the converted sources: " + StatementPatternArray);
+		// logger.info(
+		// "1313131313131313311313131313131These are now the converted sources: " +
+		// StatementPatternArray);
 		return StatementPatternArray;
 	}
 
@@ -729,26 +757,29 @@ fjp13.shutdown();
 	}
 
 	public static Set<String> getEndpoints() {
-	//	//logger.info("1313131313131313311313131313131These are now the converted endpoint: " + EndpointArray);
+		// //logger.info("1313131313131313311313131313131These are now the converted
+		// endpoint: " + EndpointArray);
 		return EndpointArray;
 	}
 
 	public Set<Endpoint> getEndpointE(Triple t) {
-	//	for(Entry<String, Set<Endpoint>> r:EndpointRef.entrySet()) {
-	//		System.out.println("These are the conditionals:"+r+"--"+(t.getSubject().toString().substring(1)+"--"+t.getObject().toString().substring(1)));
-	//				}
-			
-	for(Entry<String, Set<Endpoint>> r:EndpointRef.entrySet()) {
-				if((t.getSubject().toString().substring(1)+"--"+t.getObject().toString().substring(1)).equals(r.getKey()))
-					return r.getValue();
-				}
-					//	for(Object ti:triples[i][8].)
-	return null;
-					
-	//	System.out.println("1313131313131313311313131313131These are now the converted endpoint: " + EndpointArrayE);
-		
-	}
+		// for(Entry<String, Set<Endpoint>> r:EndpointRef.entrySet()) {
+		// System.out.println("These are the
+		// conditionals:"+r+"--"+(t.getSubject().toString().substring(1)+"--"+t.getObject().toString().substring(1)));
+		// }
 
+		for (Entry<String, Set<Endpoint>> r : EndpointRef.entrySet()) {
+			if ((t.getSubject().toString().substring(1) + "--" + t.getObject().toString().substring(1))
+					.equals(r.getKey()))
+				return r.getValue();
+		}
+		// for(Object ti:triples[i][8].)
+		return null;
+
+		// System.out.println("1313131313131313311313131313131These are now the
+		// converted endpoint: " + EndpointArrayE);
+
+	}
 
 	public static void checkExclusiveGroup(List<ExclusiveStatement> exclusiveGroupStatements) {
 		// by default do nothing

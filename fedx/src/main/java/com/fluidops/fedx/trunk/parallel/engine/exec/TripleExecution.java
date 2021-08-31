@@ -139,6 +139,7 @@ public class TripleExecution {
 
 			Set<Endpoint> relevantSources;
 			relevantSources = opt.getEndpointE(triple);
+ System.out.println("This is value of intermediate2222:"+relevantSources);
 
 			for (Endpoint endpoints : relevantSources) {
 				taskcounter++;
@@ -215,16 +216,17 @@ public class TripleExecution {
 
 			List<Callable<Integer>> tasks = new ArrayList<Callable<Integer>>();
 			TripleExecution temp = this;
-			ForkJoinPool exec = new ForkJoinPool();
+			ExecutorService exec = Executors.newWorkStealingPool();
+			//ForkJoinPool exec = new ForkJoinPool();
 
 			for (Endpoint endpoints : relevantSources1) {
-				System.out.println("These are the endpoints:"+endpoints+"--"+temp);
+				//System.out.println("These are the endpoints:"+endpoints+"--"+temp);
 				
 				for (Binding binding : intermediate) {
 					Callable<Integer> c = new Callable<Integer>() {
 						@Override
 						public Integer call() throws Exception {
-							 System.out.println("This is the binding in intermediate within call:"+temp+"--"+endpoints);
+					//		 System.out.println("This is the binding in intermediate within call:"+temp+"--"+endpoints);
 
 							BoundQueryTask current3 = new BoundQueryTask(temp, endpoints, binding, string);
 							try {
@@ -240,8 +242,13 @@ public class TripleExecution {
 					tasks.add(c);
 				}
 			
-				//try {
-					List<Future<Integer>> results = exec.invokeAll(tasks);
+			//	try {
+					try {
+						List<Future<Integer>> results = exec.invokeAll(tasks);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					long elapsed = System.currentTimeMillis() - start;
 					System.out.println(String.format("Total time elapsed:%d ms", elapsed));
 			//	} finally {

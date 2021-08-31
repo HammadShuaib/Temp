@@ -1243,30 +1243,30 @@ static void IntermediateProcedure(List<Binding> results,List<EdgeOperator> AllEd
 				System.out.println("This is end 23 set Alledges in HashJoin:"+ae);
 					for(Entry<Vertex, Edge> ev:e.getKey().entrySet())
 					{joinVars=null;
-					System.out.println("This is euqality of AllEdges Vertex:"+ae.getEdge()+"--"+ev.getValue());
+			//		System.out.println("This is euqality of AllEdges Vertex:"+ae.getEdge()+"--"+ev.getValue());
 						
 					if(ev.getValue().toString().equals(ae.getEdge().toString())) {
 						//for(Entry<Vertex, Set<Binding>> e1:BGPEval.StartBinding123.entrySet())
 					//				if(e1.getKey().toString().equals(ev.getKey().toString()))
 					//					if(e1.getValue()!=null)
 					//					return;
-						System.out.println("This is end 25 set Alledges equal in HashJoin:"+ae.getEdge()+"--"+ev.getValue());
+					//	System.out.println("This is end 25 set Alledges equal in HashJoin:"+ae.getEdge()+"--"+ev.getValue());
 									
 							Iterator<Var> l = results.iterator().next().vars();
 							Var r = Var.alloc(ev.getKey().getNode());
-						System.out.println("This is rule no. 1:"+r+"--"+ev.getKey().getNode());
+					//	System.out.println("This is rule no. 1:"+r+"--"+ev.getKey().getNode());
 							while (l.hasNext()) {
 								Var v = l.next();
 								
 								if (r.equals(v)) {
-									System.out.println("This is rule no.3:"+r+"--"+v);
+				//					System.out.println("This is rule no.3:"+r+"--"+v);
 									joinVars=v;
 								}
 							}
 							
 							if(joinVars==null)
 								return;
-							System.out.println("This is rule no. 2:"+joinVars);
+			//				System.out.println("This is rule no. 2:"+joinVars);
 							
 							for(Binding e1:results){
 					//		BindingMap join = BindingFactory.create();
@@ -1278,10 +1278,10 @@ static void IntermediateProcedure(List<Binding> results,List<EdgeOperator> AllEd
 								
 								
 						};
-						System.out.println("This is temp1:"+temp1.size());
+		//				System.out.println("This is temp1:"+temp1.size());
 							BGPEval.StartBinding123.put(ev.getKey(), temp1);
-							for(Entry<Vertex, Set<Binding>> sj:BGPEval.StartBinding123.entrySet())
-								System.out.println("This is bindJoin with value:"+sj.getKey()+"--"+sj.getValue().size());
+		//					for(Entry<Vertex, Set<Binding>> sj:BGPEval.StartBinding123.entrySet())
+	//							System.out.println("This is bindJoin with value:"+sj.getKey()+"--"+sj.getValue().size());
 							
 					}
 						
@@ -1290,8 +1290,8 @@ static void IntermediateProcedure(List<Binding> results,List<EdgeOperator> AllEd
 			
 			}
 		}
-		for(Entry<Vertex, Set<Binding>> sj:BGPEval.StartBinding123.entrySet())
-			System.out.println("This is bindJoin with value111111:"+sj.getKey()+"--"+sj.getValue().size());
+		//for(Entry<Vertex, Set<Binding>> sj:BGPEval.StartBinding123.entrySet())
+		//	System.out.println("This is bindJoin with value111111:"+sj.getKey()+"--"+sj.getValue().size());
 }
 
 }

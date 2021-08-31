@@ -49,7 +49,6 @@ public class BoundQueryTask extends QueryTask {
 	public BoundQueryTask(TripleExecution te, Endpoint service, Binding bindings, String string) {
 		super(te, service);
 		this.bindings = bindings;
-		this.task  =string;
 	//for(Binding b:bindings)
 	//	System.out.println("This is secure here:"+b);
 		// //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!BoundQueryTask!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -66,13 +65,13 @@ public synchronized Binding getBindings(){
 	//bin.clear();
 //		TripleExecution.i++;
 		//synchronized(bindings) {
-		List<Binding> bs= new ArrayList<Binding>();
+		//List<Binding> bs= new ArrayList<Binding>();
 		 Node subject,object,predicate;
 //		 if(BindJoin.MultipleBinding!=null)
 //for(Entry<Binding, Binding> i:BindJoin.MultipleBinding.entries())
 //	if(i.getValue().equals(this.bindings))
 //		bs.addAll(BindJoin.MultipleBinding.get(i.getKey()));
-//	 System.out.println("This is doubly query being processed::"+bs+"--"+this.bindings+"--"+bs.size());
+	// System.out.println("This is doubly query being processed::"+bs+"--"+this.bindings+"--"+bs.size());
 		 
 		Query query = new Query();
 		ElementGroup elg = new ElementGroup();
@@ -271,7 +270,7 @@ results.add(extend);
 		//for(Entry<String, Binding> pe:proExt.entries())
 		//	System.out.println("This is pe:"+pe);
 		synchronized(proExt) {
-			proExt.entries().parallelStream().forEach(entry->{
+			for(Entry<String,Binding> entry:proExt.entries()){
 
 	//	ab++;
 //	System.out.println("These are the number of bidings:"+ab);
@@ -367,7 +366,6 @@ results.add(extend);
 				
 				//	 System.out.println("This is extend3:"+e);
 int a=0;
-String s3 = null;
 //for(String rrr1:rr.split(" ")) {
 //System.out.println("This is extend2:"+a+"--"+rrr1);
 //}
@@ -377,7 +375,7 @@ String s3 = null;
 					      if((rrr1.endsWith("\n")) && rrr1.startsWith("<"))
 					      {		s1=rrr1.replace("\n", "");
 						   	 extend.add(Var.alloc(triple.getSubject().toString().substring(1)), StageGen.StringConversion(s1.replace("<", "").replace(">", "")));
-						 //    System.out.println("This is extend3.1:"+triple.getSubject()+"--"+extend);		
+			//			     System.out.println("This is extend3.1:"+triple.getSubject()+"--"+extend);		
 					      }
 					    
 								 
@@ -391,10 +389,10 @@ String s3 = null;
 						if(a==9)
 						{	s1=rrr1;
 						 extend.add(Var.alloc(triple.getObject().toString().substring(1)), StageGen.StringConversion(s1.replace("<", "").replace(">", "")));
-					//	 System.out.println("This is extend3.2:"+triple.getObject()+"--"+extend);
+	//					 System.out.println("This is extend3.2:"+triple.getObject()+"--"+extend);
 						   	
 						} 
-				//		System.out.println("This is extend3.3:"+a+"--"+rrr1);
+		//				System.out.println("This is extend3.3:"+a+"--"+rrr1);
 						 }
 			    		a++;
 				 }}
@@ -442,7 +440,7 @@ resultsBq.add(extend); */
 					//}
 //		}
 }
-);
+//);
 //for(Entry<String, ResultSet> r:pro.entrySet())
 //{
 //synchronized(r) {	

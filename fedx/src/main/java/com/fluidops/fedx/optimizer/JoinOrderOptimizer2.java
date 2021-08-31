@@ -13,6 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.fluidops.fedx.util.BindJoin;
 import com.fluidops.fedx.util.CardinalityVisitor;
 import com.fluidops.fedx.util.HashJoin;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.eclipse.rdf4j.query.algebra.Filter;
@@ -31,7 +34,7 @@ import com.fluidops.fedx.structures.QueryInfo;
 
 public class JoinOrderOptimizer2 extends StatementGroupOptimizer3{
 	public static Logger log = LoggerFactory.getLogger(JoinOrderOptimizer.class);
-	
+	public static Multimap<String,Set<String>> joinType =ArrayListMultimap.create();
 	public static LinkedHashMap<LinkedHashMap<Double,Double>,TupleExpr> Join= new LinkedHashMap<>(); 
 	public static LinkedHashMap<LinkedHashMap<Double,Double>,LinkedHashMap<Integer,ArrayList<HashMap<Var,Var>>>> JoinVar= new LinkedHashMap<>(); 
 
@@ -208,23 +211,47 @@ public class JoinOrderOptimizer2 extends StatementGroupOptimizer3{
 			///*
 			
 			if (useHashJoin || (!useBindJoin && hashCost < bindCost && leftArg.nd.card < 1000000 && rightArg.nd.card < 1000000 )) {
-			//	System.out.println("This will now use hashJoin"+leftArg.expr+"--"+rightArg.expr+"--"+hashCost+"--"+bindCost);
 				newNode = new HashJoin(leftArg.expr, rightArg.expr, queryInfo);
 JoinExprHB.put(hashCost, bindCost);
-				
+System.out.println("This will now use hashJoin"+leftArg.expr.getBindingNames()+"--"+rightArg.expr.getBindingNames()+"--"+hashCost+"--"+bindCost);
+
+//	for(TupleExpr nn:newNode.getArgs()) {
+				//	nn.getBindingNames();
+				//}
 				Join.put(JoinExprHB, leftArg.expr);
 				JoinVar.put(JoinExprHB,CardinalityVisitor.VarJoinType);
-					
-				//useHashJoin = true; // pin
+				Set<String> join= new HashSet<String>();
+				if(joinType==null ||joinType.isEmpty()) {
+					join.addAll(leftArg.expr.getBindingNames());
+					join.addAll(rightArg.expr.getBindingNames());
+					joinType.put("HashJoin",join);
+					}	//useHashJoin = true; // pin
+				else {
+					join.addAll(rightArg.expr.getBindingNames());
+					joinType.put("HashJoin",join);
+				}
 			} else {
-			//	System.out.println("This will now use BindJoin"+leftArg.expr+"--"+rightArg.expr+"--"+hashCost+"--"+bindCost);
+				//leftArg.
 				newNode = new BindJoin(leftArg.expr, rightArg.expr, queryInfo);
-			///	BindJoin.put(hashCost, rightArg.expr);
+				System.out.println("This will now use bindJoin"+leftArg.expr.getBindingNames()+rightArg.expr.getBindingNames()+"--"+"--"+hashCost+"--"+bindCost);
+
+				///	BindJoin.put(hashCost, rightArg.expr);
+			//.out.println("This will now use BindJoin"+leftArg.expr+"--"+rightArg.expr+"--"+hashCost+"--"+bindCost);
+				
 				JoinExprHB.put(hashCost, bindCost);
 				
 				Join.put(JoinExprHB, leftArg.expr);
 				JoinVar.put(JoinExprHB, CardinalityVisitor.VarJoinType);
-								
+				Set<String> join= new HashSet<String>();
+				if(joinType==null ||joinType.isEmpty()) {
+				join.addAll(leftArg.expr.getBindingNames());
+				join.addAll(rightArg.expr.getBindingNames());
+				joinType.put("BindJoin",join);
+				}
+				else {
+					join.addAll(rightArg.expr.getBindingNames());
+					joinType.put("BindJoin",join);
+				}
 				//useBindJoin = true; // pin
 			}
 			//*/
